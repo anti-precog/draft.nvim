@@ -3,6 +3,7 @@ local ns_id = vim.api.nvim_create_namespace("prose-mode")
 local group = vim.api.nvim_create_augroup("ProseMode", { clear = true })
 
 local function update_visual_indent(buf)
+	-- PERF: Set only for viusal lines
 	vim.api.nvim_buf_clear_namespace(buf, ns_id, 0, -1)
 	for i = 0, vim.api.nvim_buf_line_count(buf) - 1 do
 		vim.api.nvim_buf_set_extmark(buf, ns_id, i, 0, {
@@ -37,8 +38,8 @@ function M.setup(opts)
 	opts = opts or {}
 	local filetypes = opts and opts.filetypes or { "draft" }
 
-	--vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TextChanged", "TextChangedI", "InsertLeave" }, {
-	vim.api.nvim_create_autocmd({ "BufEnter", "TextChanged" }, {
+	-- PERF: Select only necessary events for autocmd
+	vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter", "TextChanged", "TextChangedI", "InsertLeave" }, {
 		group = group,
 		callback = function(args)
 			if vim.tbl_contains(filetypes, vim.bo[args.buf].filetype) then
