@@ -1,11 +1,8 @@
 local M = {}
 
-function M.hello()
-	print("Hello! Plugin work!")
+function M.setup(opts)
+	local dash = opts.dash or "-"
+	vim.keymap.set("i", dash, "—", { buffer = true })
 end
-
-vim.api.nvim_create_user_command("HelloPlugin", function()
-	M.hello()
-end, {})
 
 return M
