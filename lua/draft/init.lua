@@ -35,7 +35,7 @@ function M.setup(opts)
 		{ "FileType", "BufEnter", "BufWinEnter", "TextChanged", "TextChangedI", "InsertLeave" },
 		{
 			group = draft_gr,
-			pattern = "draft",
+			pattern = "*.draft",
 			callback = function(args)
 				hl.update_indent(args.buf)
 			end,
