@@ -14,13 +14,11 @@ function M.update_indent(buf)
 	end
 end
 
-function M.update_quote()
+function M.update_syntax()
 	vim.api.nvim_set_hl(0, "Quote", { italic = true })
 	vim.fn.matchadd("Quote", '"[^"]\\+"') -- quotes
 	vim.fn.matchadd("Quote", "—[^—]*\\(—\\|$\\)") -- dialogues
-end
 
-function M.setup()
 	vim.fn.matchadd("Comment", "^\t.*") -- lines start with tab
 	vim.fn.matchadd("Function", "^ .*") -- lines start with space
 end

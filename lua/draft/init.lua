@@ -10,8 +10,17 @@ end
 local config = require("draft.commands")
 
 local function setup_keymap()
+	-- moves along "visual" lines, no on real ones
+	vim.keymap.set("n", "j", function()
+		return vim.v.count == 0 and "gj" or "j"
+	end, { expr = true })
+	vim.keymap.set("n", "k", function()
+		return vim.v.count == 0 and "gk" or "k"
+	end, { expr = true })
+
 	vim.keymap.set("i", "-", "—", { buffer = true })
 	vim.keymap.set("i", "=", "–", { buffer = true })
+
 	vim.api.nvim_set_keymap("n", "N", ":NextPage<CR>", { noremap = true, silent = true }) -- następny
 	vim.api.nvim_set_keymap("n", "P", ":PrevPage<CR>", { noremap = true, silent = true }) -- poprzedni
 	vim.api.nvim_set_keymap(
@@ -49,8 +58,7 @@ function M.setup(opts)
 		callback = function()
 			setup_local_options()
 			setup_keymap()
-			hl.setup()
-			hl.update_quote()
+			hl.update_syntax()
 		end,
 		desc = "Load draw settings",
 	})
@@ -59,7 +67,7 @@ function M.setup(opts)
 		group = draft_gr,
 		callback = function()
 			if vim.bo.filetype == "draft" then
-				hl.update_quote()
+				hl.update_syntax()
 			end
 		end,
 		desc = "Add special highlight for quotes",
