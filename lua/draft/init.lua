@@ -35,7 +35,7 @@ function M.setup(opts)
 		{ "FileType", "BufEnter", "BufWinEnter", "TextChanged", "TextChangedI", "InsertLeave" },
 		{
 			group = draft_gr,
-			pattern = "*.draft",
+			pattern = "draft",
 			callback = function(args)
 				hl.update_indent(args.buf)
 			end,
@@ -43,9 +43,9 @@ function M.setup(opts)
 		}
 	)
 
-	vim.api.nvim_create_autocmd("BufEnter", {
+	vim.api.nvim_create_autocmd({ "FileType", "BufEnter" }, {
 		group = draft_gr,
-		pattern = "*.draft",
+		pattern = "draft",
 		callback = function()
 			setup_local_options()
 			setup_keymap()
@@ -57,9 +57,10 @@ function M.setup(opts)
 
 	vim.api.nvim_create_autocmd("ColorScheme", {
 		group = draft_gr,
-		pattern = "*.draft",
 		callback = function()
-			hl.update_quote()
+			if vim.bo.filetype == "draft" then
+				hl.update_quote()
+			end
 		end,
 		desc = "Add special highlight for quotes",
 	})
