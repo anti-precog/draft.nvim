@@ -20,7 +20,10 @@ function M.update_syntax()
 	vim.fn.matchadd("Quote", "—[^—]*\\(—\\|$\\)") -- dialogues
 
 	vim.fn.matchadd("Comment", "^\t.*") -- lines start with tab
-	vim.fn.matchadd("Function", "^ .*") -- lines start with space
+	vim.fn.matchadd("Underlined", "^ .* $") -- lines start with space
+	-- vim.fn.matchadd("Title", "^ .*") -- NOTE: started by space
+	-- vim.fn.matchadd("Underlined", [[^\u.*[^.]$]]) -- NOTE: Started by vappital letter and no ended by dot
+	-- TODO: Special color for actual editing line.
 end
 
 return M
