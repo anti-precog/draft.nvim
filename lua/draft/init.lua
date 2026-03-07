@@ -18,6 +18,10 @@ local function setup_keymap()
 
 	vim.keymap.set("i", "-", "—", { buffer = true })
 	vim.keymap.set("i", "=", "–", { buffer = true })
+
+	vim.api.nvim_set_keymap("n", "N", ":NextPage<CR>", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("n", "P", ":PrevPage<CR>", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("n", "S", ":SelectPage<CR>", { noremap = true, silent = true })
 end
 
 local draft_gr = vim.api.nvim_create_augroup("draft", { clear = true })

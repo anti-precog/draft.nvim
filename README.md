@@ -20,12 +20,7 @@ Install the plugin with lazy package manager:
 ```lua
 {
 	"anti-precog/draft.nvim",
-    ft = "draft",
-    keys = {
-		{ "S", "<cmd>SelectPage<cr>", desc = "Open selected file" },
-		{ "P", "<cmd>Page<cr>", desc = "Open pref file" },
-		{ "N", "<cmd>NextPage<cr>", desc = "Open next file" }
-	}
+    ft = "draft"
 }
 ```
 ## Requirements

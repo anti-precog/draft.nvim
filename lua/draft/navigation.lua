@@ -22,12 +22,12 @@ end
 
 vim.api.nvim_create_user_command("SelectPage", function()
 	-- local num = tonumber(opts.args)
-	local num = vim.fn.input("number: ")
+	local num = tonumber(vim.fn.input("number: "))
+	vim.cmd("redraw!")
 	if not num then
 		print("Give correct number of file.")
 		return
 	end
-	vim.cmd("redraw!")
 	go_to_page(num)
 end, {
 	desc = "Create or open a file with selected number",
