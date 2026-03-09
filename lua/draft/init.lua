@@ -5,53 +5,40 @@ local M = {}
 function M.setup(opts)
 	local draft_gr = vim.api.nvim_create_augroup("draft", { clear = true })
 	opts = opts or {}
-	--[[ HACK:
-	vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-		pattern = "*.draft",
-		callback = function()
-			vim.bo.filetype = "draft"
-			print("Filetype set to draft")
-		end,
-	})
-	]]
-	--
 
 	local core = require("draft.core")
-	local nav = require("draft.navigation")
-	local decorator = require("draft.decorator")
-
-	-- control indent in lines
-	-- PERF: Select only necessary events for autocmd
-	vim.api.nvim_create_autocmd(
-		{ "FileType", "BufEnter", "BufWinEnter", "TextChanged", "TextChangedI", "InsertLeave" },
-		{
-			group = draft_gr,
-			pattern = "*.draft",
-			callback = function(args)
-				decorator.render(args.buf)
-			end,
-			desc = "Redraw indents",
-		}
-	)
-
-	vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "BufLeave" }, {
+	vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
 		group = draft_gr,
+		-- NOTE: *.draft -> (BufEnter) draft -> (FileType)
 		pattern = { "draft", "*.draft" },
 		callback = function()
-			print("jestem w " .. vim.bo.filetype)
-			core.setup()
-			core.set_visual_move()
-			nav.activate_commands()
+			core.set_dash_keys()
+			core.set_visual_move_keys()
 		end,
-		desc = "Load draw settings",
+		desc = "load draft.core settings",
 	})
 
-	vim.api.nvim_create_autocmd("ColorScheme", {
+	local decorator = require("draft.decorator")
+	vim.api.nvim_create_autocmd({ "BufEnter", "FileType", "TextChanged", "TextChangedI", "ColorScheme" }, {
 		group = draft_gr,
+		-- NOTE: *.draft -> (BufEnter/TextChanged/TextChangedI) draft -> (FileType/ColorScheme)
+		-- WARNING: decorator not working for new added text in only draft filetypes (*.draft extension is needed)
+		pattern = { "draft", "*.draft" },
 		callback = function(args)
-			decorator.render(args.buf)
+			decorator.render(args.buf, 4)
 		end,
-		desc = "Add special highlight for quotes",
+		desc = "decorate draft buffer",
+	})
+
+	local nav = require("draft.navigator")
+	vim.api.nvim_create_autocmd({ "BufEnter", "FileType" }, {
+		group = draft_gr,
+		-- NOTE: *.draft -> (BufEnter) draft -> (FileType)
+		pattern = { "draft", "*.draft" },
+		callback = function()
+			nav.activate_commands()
+		end,
+		desc = "activate drafts navigator",
 	})
 end
 

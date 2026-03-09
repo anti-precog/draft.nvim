@@ -18,7 +18,7 @@ end
 ---@param line string
 ---@return boolean
 local function is_comment(line)
-	return line:match("^\t.*")
+	return line:match("^[\t ].*")
 end
 
 ---@param line string
@@ -38,8 +38,14 @@ local function decore_as(hl_group, buf, line_nr, start, stop)
 	vim.api.nvim_buf_add_highlight(buf, draft_ns, hl_group, line_nr - 1, start, stop)
 end
 
+---@return boolean
+local function is_insert_mode()
+	return "i" == vim.api.nvim_get_mode().mode
+end
+
 ---@param buf string
-function M.render(buf)
+---@param tab_length number
+function M.render(buf, tab_length)
 	vim.api.nvim_buf_clear_namespace(buf, draft_ns, 0, -1)
 	-- vim.api.nvim_set_hl(0, "Quote", { italic = true })
 
@@ -50,15 +56,14 @@ function M.render(buf)
 		if is_comment(line) then
 			decore_as("NonText", buf, nr)
 		elseif is_header(line) then
-			if nr ~= cursor_pos then
-				make_indent(buf, nr, 10)
-				decore_as("Title", buf, nr)
+			if nr == cursor_pos and is_insert_mode() then
+				make_indent(buf, nr, tab_length)
 			else
-				make_indent(buf, nr, 5)
+				make_indent(buf, nr, tab_length * 2)
+				decore_as("Title", buf, nr)
 			end
 		else
-			make_indent(buf, nr, 5)
-
+			make_indent(buf, nr, tab_length)
 			local line_len = #line
 			local pos = 1
 
