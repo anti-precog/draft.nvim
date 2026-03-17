@@ -1,6 +1,3 @@
----@module "navigator"
-local M = {}
-
 ---@return string
 local function get_dir()
 	return vim.fn.expand("%:p:h")
@@ -23,7 +20,6 @@ local function load_page(filename, num)
 	local full_path = get_dir() .. "/" .. filename:gsub("(%d+)", tostring(num), 1)
 	vim.cmd("argadd " .. full_path)
 	vim.cmd("edit " .. full_path)
-	print("Loaded file: " .. full_path)
 end
 
 local function select_page()
@@ -60,7 +56,12 @@ local function return_page()
 	load_page(filename, page_num - 1)
 end
 
-local function activate_commands()
+-- a submodule adding commands
+---@class commands
+local M = {}
+
+-- init
+function M.setup()
 	vim.api.nvim_buf_create_user_command(0, "SelectPage", function()
 		select_page()
 	end, {
@@ -77,21 +78,6 @@ local function activate_commands()
 		return_page()
 	end, {
 		desc = "Go to prev page",
-	})
-end
-
----@param opts table
-function M.setup(opts)
-	local group = vim.api.nvim_create_augroup("draft-nav", { clear = true })
-
-	vim.api.nvim_create_autocmd({ "FileType" }, {
-		group = group,
-		-- NOTE: *.draft -> (BufEnter) draft -> (FileType)
-		pattern = opts.filetypes,
-		callback = function()
-			activate_commands()
-		end,
-		desc = "activate drafts navigator",
 	})
 end
 
