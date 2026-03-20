@@ -30,9 +30,11 @@ Install the plugin with lazy package manager:
 ```lua
 {
 	-- all loaded features works only fot that filetypes
-	filetypes = { "draft" },
+	filetypes = { "draft", "text" },
 
-	-- [[ CORE module options ]]
+	-- select how to recognize dialogues as em-dash or en-dash
+	dash = "—",
+
 	-- improved moved on features
 	-- true - navigating [j/k] through the file ignore line wraping
 	-- false - disable that feature
@@ -42,15 +44,12 @@ Install the plugin with lazy package manager:
 	-- it can be symbol one even characters string
 	-- nil - disable that repleacment
 	auto_repleace_symbols = {
-		emdash = "--", -- used to mark dialogues
-		dash = "=", -- used as dash (not hyphen)
+		dash = "--", -- used to mark dialogues
 	},
 
-	-- [[ NAVIGATOR module options ]]
-	-- load page navigator feature
-	navigator = true,
+	-- load paginator feature
+	paginator = false,
 
-	-- [[ DECORATOR module options ]]
 	-- set indent size for all paragraph
 	indent = 4, -- set to 0 to disable
 
@@ -58,15 +57,15 @@ Install the plugin with lazy package manager:
 	-- nil - disable syntax
 	syntax = {
 		dialogue = "Statement",
-		quote = "Statement",
+		--quote = "Statement",
 		comment = "NonText",
-		header = "Statement",
+		header = "Title",
 	},
 
 	-- center selected sections
 	-- nil - leave default indent
 	center = {
-		header = true,
+		header = false,
 		asterix = true,
 	},
 }
