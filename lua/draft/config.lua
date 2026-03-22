@@ -12,9 +12,10 @@ local validator = require("draft.validator")
 ---@field center table<string, boolean>|nil
 local defaults = {
 	-- all loaded features works only fot that filetypes
-	filetypes = { "draft" },
+	filetypes = { "draft", "text" },
 
 	-- select how to recognize dialogues as em-dash or en-dash
+	--dash = "—",
 	dash = "—",
 
 	-- [[ CORE module options ]]
@@ -64,7 +65,7 @@ local M = {}
 M.namespace = vim.api.nvim_create_namespace("draft")
 
 ---@type options
-M.options = nil
+M.options = defaults
 
 ---@class moduleChecker
 ---@field core boolean
@@ -76,10 +77,28 @@ M.valid = {
 	decorator = false,
 }
 
+local function init_options(opts)
+	M.options = vim.tbl_deep_extend("force", defaults, opts or {})
+end
+
+local function init_validation()
+	assert(type(M.options.filetypes) == "table", "filetypes - wrong type")
+	assert(type(M.options.dash) == "string", "dash - wrong type")
+	assert(type(M.options.move_by_visual_lines) == "boolean", "move_by_visaul_lines - wrong type")
+	assert(type(M.options.auto_repleace_symbols) == "table", "auto_repleace_symbols - wrong type")
+	assert(type(M.options.paginator) == "boolean", "pagginator - wrong type")
+	assert(type(M.options.indent) == "number", "indent - wrong type")
+	assert(type(M.options.syntax) == "table", "syntax wrong type")
+	assert(type(M.options.center) == "table", "center wrong type")
+
+	assert(M.options.dash ~= "", "dash symbol can not be empty")
+end
+
 ---@param opts options
 ---@return config
 function M.setup(opts)
-	M.options = vim.tbl_deep_extend("force", defaults, opts or {})
+	init_options(opts)
+	init_validation()
 
 	if M.options.move_by_visual_lines == true or validator.has_values(M.options.auto_repleace_symbols) then
 		M.valid.core = true
