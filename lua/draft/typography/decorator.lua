@@ -1,4 +1,3 @@
-local config = require("draft.config").configuration
 local ns = require("draft.config").namespace
 local selected_line = require("draft.typography.line")
 
@@ -63,8 +62,9 @@ end
 
 -- init module
 function M.setup()
-	local typo_config = config.typography
-	table.insert(steps, clear_line)
+	local typo_config = require("draft.config").configuration.typography
+
+	add_step(clear_line)
 	if typo_config.comment_hl then
 		add_step(require("draft.typography.sub.hl_comment").try_make)
 	end

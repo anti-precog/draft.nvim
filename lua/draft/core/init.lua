@@ -1,4 +1,4 @@
-local config = require("draft.config").configuration
+local core_config = require("draft.config").configuration.core
 
 local active_features = {}
 
@@ -13,7 +13,6 @@ local M = {}
 -- init module
 ---@return CoreModule
 function M.setup()
-	local core_config = config.core
 	if core_config.move_by_visual_lines then
 		set_activate(require("draft.core.visual_move_keys").vim_setup)
 		set_activate(require("draft.core.visual_move_keys").keymaps)
@@ -28,7 +27,7 @@ function M.setup()
 	local group = vim.api.nvim_create_augroup("draft-core", { clear = true })
 	vim.api.nvim_create_autocmd({ "FileType" }, {
 		group = group,
-		pattern = config.filetypes,
+		pattern = "draft",
 		callback = function()
 			for _, feature in ipairs(active_features) do
 				feature()

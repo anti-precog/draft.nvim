@@ -1,6 +1,3 @@
-local config = require("draft.config").configuration
-local ns = require("draft.config").namespace
-
 local decorator
 
 ---@return boolean
@@ -9,15 +6,9 @@ local is_insert_mode = function()
 end
 
 ---@param buf_nr number
----@return boolean
-local function is_correct_ft(buf_nr)
-	local current_ft = vim.bo[buf_nr].filetype
-	for _, ft in ipairs(config.filetypes) do
-		if current_ft == ft then
-			return true
-		end
-	end
-	return false
+---@return string
+local function current_filetype(buf_nr)
+	return vim.bo[buf_nr].filetype
 end
 
 ---@param buf_nr number
@@ -46,13 +37,14 @@ end
 local M = {}
 
 function M.setup()
-	local typo_config = config.typography
+	local typo_config = require("draft.config").configuration.typography
+	local ns = require("draft.config").namespace
 	decorator = require("draft.typography.decorator").setup()
 
 	vim.api.nvim_set_decoration_provider(ns, {
 
 		on_win = function(_, win_id, buf_nr, toprow, botrow)
-			if not is_correct_ft(buf_nr) then
+			if "draft" ~= current_filetype(buf_nr) then
 				return false -- stop all
 			end
 
@@ -86,7 +78,7 @@ function M.setup()
 	})
 	if typo_config.center_asterix or typo_config.center_header then
 		vim.api.nvim_create_autocmd("FileType", {
-			pattern = config.filetypes,
+			pattern = "draft",
 			callback = function(args)
 				set_post_CR_decore(args.buf)
 			end,

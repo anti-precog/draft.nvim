@@ -8,7 +8,8 @@
 
 ## Idea
 
-The plugin is designed to help writers use characters such as dashes and quotation marks to create the most complete draft possible. The text should have no additional formatting, with *one line representing a single paragraph*.
+The plugin is designed to help writers by visual text formatting (indents, highlightx) and use characters (dashes and quotation marks) to create the most complete story draft possible. The text should have no additional formatting, with the rule:  **one line representing a single paragraph**.
+Text should be fully portabled to other filetypes.
 
 ## Features
 
@@ -49,12 +50,7 @@ Proposed (out of box) setup:
 	"anti-precog/draft.nvim",
 	ft = "draft",
 	init = function()
-		-- add assiciated filetype
-		vim.filetype.add({
-			extension = {
-				draft = "draft",
-			},
-		})
+		require("draft").init_filetype()
 	end,
 	config = function()
 		-- add new highlight group
@@ -78,12 +74,6 @@ Defualt options:
 
 ```lua
 {
-	-- all loaded features works only fot that filetypes
-	filetypes = {
-		"draft",
-		"text",
-	},
-
 	-- select how to recognize dialogues as em-dash or en-dash
 	dash_symbol = "em-dash",
 

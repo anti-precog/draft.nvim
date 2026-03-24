@@ -6,11 +6,6 @@
 ---@field improvements table
 ---@field typography table
 local defaults = {
-	-- all loaded features works only fot that filetypes
-	filetypes = {
-		"draft",
-	},
-
 	-- select how to recognize dialogues as em-dash or en-dash
 	dash_symbol = "em-dash",
 

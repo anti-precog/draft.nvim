@@ -1,4 +1,3 @@
---@type table
 local config = require("draft.config").configuration
 local typo_config = config.typography
 local ns = require("draft.config").namespace

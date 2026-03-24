@@ -1,5 +1,4 @@
-local opt = require("draft.config").configuration
-local typo_config = opt.typography
+local typo_config = require("draft.config").configuration.typography
 local ns = require("draft.config").namespace
 
 local selected_line = require("draft.typography.line")
@@ -133,7 +132,7 @@ function M.try_rehl_header()
 		clear_line()
 
 		if typo_config.indent_size > 0 then
-			require("draft.typography.indenter").make_indent()
+			require("draft.typography.sub.indenter").make_indent()
 		end
 
 		vim.api.nvim_buf_add_highlight(

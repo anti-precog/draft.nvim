@@ -1,5 +1,3 @@
-local config = require("draft.config").configuration
-
 -- a module for quickly jumping through files in the project
 ---@class PaginatorModule
 local M = {}
@@ -10,7 +8,7 @@ function M.setup()
 
 	vim.api.nvim_create_autocmd({ "FileType" }, {
 		group = group,
-		pattern = config.filetypes,
+		pattern = "draft",
 		callback = function()
 			require("draft.paginator.file_jumping").commands()
 		end,
