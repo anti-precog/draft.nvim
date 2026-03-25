@@ -1,77 +1,97 @@
+local global = require("draft.config")
+---@type TypographyConfig
+local typo_config = global.configuration.typography
+
+local utils = require("draft.utils")
+
+---@param buf_id integer Buffer handle
+---@return boolean status Is buffer filetype draft
+local function is_draft_type(buf_id)
+	return "draft" ~= vim.bo[buf_id].filetype
+end
+
+---@param buf_id integer Buffer handle
+---@param row_id integer Window row position
+---@return string text Text from the line
+local get_line_text = function(buf_id, row_id)
+	return vim.api.nvim_buf_get_lines(buf_id, row_id, row_id + 1, false)[1]
+end
+
+---@type Decorator
 local decorator
 
----@return boolean
-local is_insert_mode = function()
-	return vim.api.nvim_get_mode().mode == "i"
+---@param buf_id integer Buffer handle
+---@param begin_row_id integer Begin row to start clearing
+---@param end_row_id integer End row to stop clearing
+local function clear_decoration_for_range(buf_id, begin_row_id, end_row_id)
+	vim.api.nvim_buf_clear_namespace(buf_id, global.namespace, begin_row_id, end_row_id + 1)
 end
 
----@param buf_nr number
----@return string
-local function current_filetype(buf_nr)
-	return vim.bo[buf_nr].filetype
+---@param buf_id integer Buffer handle
+---@param begin_row_id integer Begin row
+---@param end_row_id integer End row
+local function get_lines_from_range(buf_id, begin_row_id, end_row_id)
+	return vim.api.nvim_buf_get_lines(buf_id, begin_row_id, end_row_id + 1, false)
 end
 
----@param buf_nr number
----@param row_nr number
----@return string
-local get_line_text = function(buf_nr, row_nr)
-	return vim.api.nvim_buf_get_lines(buf_nr, row_nr, row_nr + 1, false)[1]
+---@param win_id integer Window handle
+---@return integer row_id Number of line where cursor is
+local function get_cursor_row_id(win_id)
+	return vim.api.nvim_win_get_cursor(win_id)[1] - 1
 end
 
----@param buf_nr number
-local function set_post_CR_decore(buf_nr)
+---@param buf_id integer Buffer handle
+local function setup_post_cr_decore_mapping(buf_id)
 	vim.keymap.set({ "i", "s" }, "<CR>", function()
 		local win_id = vim.api.nvim_get_current_win()
-		local cursor_line_nr = vim.api.nvim_win_get_cursor(win_id)[1] - 1
-		if cursor_line_nr >= 0 then
-			local text = get_line_text(buf_nr, cursor_line_nr)
+		local cursor_row_id = get_cursor_row_id(win_id)
+		if cursor_row_id >= 0 then
+			local text = get_line_text(buf_id, cursor_row_id)
 
-			decorator.set_line(win_id, buf_nr, cursor_line_nr, text)
+			decorator.set_line(win_id, buf_id, cursor_row_id, text)
 			decorator.post_run()
 		end
 		return vim.api.nvim_replace_termcodes("<CR>", true, false, true)
-	end, { buffer = buf_nr, expr = true, noremap = true, silent = true })
+	end, { buffer = buf_id, expr = true, noremap = true, silent = true })
 end
 
----@class TypographyModule
+-- Setup for decoration_provider and post CR text formating
+---@class TypographyModule Setup for decoration_provider and post CR text formating
 local M = {}
 
+-- init module
 function M.setup()
-	local typo_config = require("draft.config").configuration.typography
-	local ns = require("draft.config").namespace
-	decorator = require("draft.typography.decorator").setup()
+	decorator = require("draft.typography.decorator").init()
 
-	vim.api.nvim_set_decoration_provider(ns, {
+	vim.api.nvim_set_decoration_provider(global.namespace, {
 
-		on_win = function(_, win_id, buf_nr, toprow, botrow)
-			if "draft" ~= current_filetype(buf_nr) then
-				return false -- stop all
+		on_win = function(_, win_id, buf_id, top_row_id, bottom_row_id)
+			if is_draft_type(buf_id) then
+				return false -- stop
 			end
 
-			if is_insert_mode() then
-				return true -- goto on_line
+			if utils.is_insert_mode() then
+				return true -- skip to on_line
 			end
 
-			vim.api.nvim_buf_clear_namespace(buf_nr, ns, toprow, botrow + 1)
+			clear_decoration_for_range(buf_id, top_row_id, bottom_row_id)
+			local visable_lines = get_lines_from_range(buf_id, top_row_id, bottom_row_id)
 
-			local lines = vim.api.nvim_buf_get_lines(buf_nr, toprow, botrow + 1, false)
-			for i, text in ipairs(lines) do
-				local row_nr = toprow + i - 1
-				--draw_counter[row_nr] = (draw_counter[row_nr] or 0) + 1 -- debug
-				decorator.set_line(win_id, buf_nr, row_nr, text)
+			for line_nr, text in ipairs(visable_lines) do
+				local row_id = top_row_id + line_nr - 1
+				decorator.set_line(win_id, buf_id, row_id, text)
 				decorator.run(false)
 			end
-			return false
+			return false -- stop
 		end,
 
-		on_line = function(_, win_id, buf_nr, row_nr)
-			local cursor_line = vim.api.nvim_win_get_cursor(win_id)[1] - 1
+		on_line = function(_, win_id, buf_id, row_id)
+			local cursor_row_id = get_cursor_row_id(win_id)
 
-			if cursor_line == row_nr then
-				--draw_counter[row_nr] = (draw_counter[row_nr] or 0) + 1 -- debug
-				local text = get_line_text(buf_nr, row_nr)
+			if cursor_row_id == row_id then
+				local text = get_line_text(buf_id, row_id)
 
-				decorator.set_line(win_id, buf_nr, row_nr, text)
+				decorator.set_line(win_id, buf_id, row_id, text)
 				decorator.run(true)
 			end
 		end,
@@ -80,7 +100,7 @@ function M.setup()
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "draft",
 			callback = function(args)
-				set_post_CR_decore(args.buf)
+				setup_post_cr_decore_mapping(args.buf)
 			end,
 			desc = "post <CR> decorate",
 		})

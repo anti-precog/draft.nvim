@@ -1,18 +1,19 @@
-local typo_config = require("draft.config").configuration.typography
-local ns = require("draft.config").namespace
+local global = require("draft.config")
+---@type TypographyConfig
+local typo_config = global.configuration.typography
 local selected_line = require("draft.typography.line")
 
----@return string
+---@type string Represents indent
 local space = string.rep(" ", typo_config.indent_size)
 
--- a submodule to make indents
----@class indenter
+-- A submodule to make indents
+---@class Indenter
 local M = {}
 
----@return boolean
+-- Add an indent at the beginning of the line
+---@return NextStep next_step Always return true
 function M.make_indent()
-	vim.api.nvim_buf_set_extmark(selected_line.buf, ns, selected_line.row, 0, {
-		--virt_text = { { "->" .. draw_counter[row_nr] .. " ", "NonText" } }, -- debug
+	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
 		virt_text = { { space, "NonText" } },
 		virt_text_pos = "inline",
 		hl_mode = "combine",

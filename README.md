@@ -44,26 +44,66 @@ Minimal setup:
 For proper lazy loading, it’s best to add the creation of the new file type in your neovim configuration:
 
 Proposed (out of box) setup:
+<details>
+<summary>Installation snippet.</summary>
 
 ```lua
 {
 	"anti-precog/draft.nvim",
 	ft = "draft",
-	config = function()
+	init = function()
+		-- add filetype before lazy load
+		vim.filetype.add({
+			extension = {
+				draft = "draft",
+			},
+		})
+	end,
+    opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+    },
+}
+```
+</details>
+
+Example with additionl custom highlight groups.
+
+<details>
+<summary>Installation snippet.</summary>
+
+```lua
+{
+	"anti-precog/draft.nvim",
+	ft = "draft",
+	init = function()
+		-- add filetype before lazy load
+		vim.filetype.add({
+			extension = {
+				draft = "draft",
+			},
+		})
+	end,
+    config = function()
 		-- add new highlight group
 		vim.api.nvim_set_hl(0, "Italic", { italic = true })
 		-- load main module
 		require("draft").setup({
-            -- your configuration comes here
-            -- refer to the configuration section below
+			-- your configuration comes here
+			-- refer to the configuration section below
 			typography = {
-		        quote_hl = "Italic",
-		        dialogue_hl = "Italic",
+				center_header = false,
+				header_hl = false,
+				quote_hl = "Italic",
+				dialogue_hl = "Italic",
 			},
+			paginator = true,
 		})
 	end,
 }
 ```
+</details>
 
 ## Configuration
 
@@ -74,17 +114,18 @@ Defualt options:
 	-- select how to recognize dialogues as em-dash or en-dash
 	dash_symbol = "em-dash",
 
-	-- [[ CORE module options ]]
+	-- Configuration for core module
 	core = {
 		move_by_visual_lines = true,
 		smart_quotes = true,
 		repleace_dash = "--",
 	},
 
-	-- [[ TYPOGRAPHY module options ]]
+	-- Configuration for typography module
+	---@class TypographyConfig
 	typography = {
-		indent_size = 2,
-		center_header = true,
+		indent_size = 4,
+		center_header = false,
 		center_asterix = true,
 		dialogue_hl = "Statement",
 		quote_hl = "Statement",
@@ -92,7 +133,7 @@ Defualt options:
 		header_hl = "Title",
 	},
 
-	-- [[ PAGINATOR module options ]]
+	-- Configuration for paginator module
 	paginator = false,
 
 }

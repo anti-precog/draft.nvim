@@ -1,4 +1,3 @@
--- plugin Config for each module
 ---@class Config
 ---@field dash_symbol string
 ---@field paginator boolean
@@ -8,14 +7,15 @@ local defaults = {
 	-- select how to recognize dialogues as em-dash or en-dash
 	dash_symbol = "em-dash",
 
-	-- [[ CORE module conifguration ]]
+	-- Configuration for core module
 	core = {
 		move_by_visual_lines = true,
 		smart_quotes = true,
 		repleace_dash = "--",
 	},
 
-	-- [[ TYPOGRAPHY module configuration ]]
+	-- Configuration for typography module
+	---@class TypographyConfig
 	typography = {
 		indent_size = 4,
 		center_header = false,
@@ -26,7 +26,7 @@ local defaults = {
 		header_hl = "Title",
 	},
 
-	-- [[ PAGINATOR module configuration ]]
+	-- Configuration for paginator module
 	paginator = false,
 }
 
@@ -84,9 +84,11 @@ local function repleace_dash()
 		M.configuration.dash_symbol = "–"
 	end
 end
----@type number
+
+---@type integer Global plugin namespace
 M.namespace = vim.api.nvim_create_namespace("draft")
 
+-- Init custom configuration
 ---@param opts Config
 ---@return ConfigModule
 function M.setup(opts)

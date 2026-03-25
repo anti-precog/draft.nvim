@@ -41,16 +41,7 @@ local function check_draft_filetype()
 	if is_defined_filetype("draft") then
 		vim.health.ok("filetype draft defined")
 	else
-		vim.health.warn(
-			"filetype draft no defined",
-			"Define this type in your nvim configuration or use draft.init_filetype()."
-		)
-	end
-end
-
-local function check_status(name)
-	if package.loaded[name] then
-		vim.health.info(name)
+		vim.health.warn("filetype draft no defined")
 	end
 end
 
