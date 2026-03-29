@@ -71,7 +71,6 @@ end
 -- Init decorator
 ---@return Decorator
 function M.init()
-	---@type TypographyConfig
 	local typo_config = require("draft.config").configuration.typography
 
 	add_step(clear_decoration_for_selected_line)

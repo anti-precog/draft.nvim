@@ -9,6 +9,7 @@ local QUOTE = {
 }
 
 ---@param text string Text line with probable qution marks
+---@return boolean quote_status Check if in the line quote is already open
 local function is_quote_closed_in(text)
 	local open_count = select(2, text:gsub(QUOTE.open, ""))
 	local close_count = select(2, text:gsub(QUOTE.close, ""))
@@ -20,12 +21,12 @@ end
 ---@class AutoRepleaceSubmodule
 local M = {}
 
--- Init auto replacement of dash symbol
+-- Map key for repleacement of dash symbol
 function M.dash_keymap()
 	vim.keymap.set("i", core_config.repleace_dash, config.dash_symbol, { buffer = true })
 end
 
--- Init auto replacement of smart quotes
+-- Map key for repleacement of smart quotes
 function M.quotes_keymap()
 	vim.keymap.set("i", QUOTE.straight, function()
 		local text = vim.api.nvim_get_current_line()

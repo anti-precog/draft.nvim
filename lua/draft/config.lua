@@ -1,22 +1,20 @@
 ---@class Config
 ---@field dash_symbol string
----@field paginator boolean
----@field improvements table
----@field typography table
+---@field core table|boolean
+---@field typography table|boolean
 local defaults = {
 	-- select how to recognize dialogues as em-dash or en-dash
 	dash_symbol = "em-dash",
 
 	-- Configuration for core module
-	---@class CoreConfig
 	core = {
-		move_by_visual_lines = true,
-		smart_quotes = true,
 		repleace_dash = "--",
+		smart_quotes = true,
+		move_by_visual_lines = true,
+		auto_turn_page = true,
 	},
 
 	-- Configuration for typography module
-	---@class TypographyConfig
 	typography = {
 		indent_size = 4,
 		center_header = false,
@@ -26,9 +24,6 @@ local defaults = {
 		comment_hl = "NonText",
 		header_hl = "Title",
 	},
-
-	-- Configuration for paginator module
-	paginator = false,
 }
 
 local function pre_validate(opts)
@@ -42,7 +37,6 @@ local function pre_validate(opts)
 		},
 		core = { opts.core, { "table, boolean" }, true },
 		typography = { opts.typography, { "table", "boolean" }, true },
-		paginator = { opts.paginator, "boolean", true },
 	})
 end
 
@@ -58,6 +52,7 @@ local function post_validate()
 			move_by_visual_lines = { M.configuration.core.move_by_visual_lines, "boolean", false },
 			smart_quotes = { M.configuration.core.smart_quotes, "boolean", false },
 			repleace_dash = { M.configuration.core.repleace_dash, { "string", "boolean" }, false },
+			auto_turn_page = { M.configuration.core.auto_turn_page, "boolean", false },
 		})
 	end
 

@@ -1,7 +1,6 @@
 local global = require("draft.config")
 ---@type Config
 local config = require("draft.config").configuration
----@type TypographyConfig
 local typo_config = config.typography
 
 local selected_line = require("draft.typography.line")

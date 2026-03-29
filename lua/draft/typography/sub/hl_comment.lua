@@ -1,5 +1,4 @@
 local global = require("draft.config")
----@type TypographyConfig
 local typo_config = global.configuration.typography
 
 local selected_line = require("draft.typography.line")

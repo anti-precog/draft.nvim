@@ -9,9 +9,6 @@ function draft.setup(opts)
 	if config.core then
 		require("draft.core").setup()
 	end
-	if config.paginator then
-		require("draft.paginator").setup()
-	end
 	if config.typography then
 		require("draft.typography").setup()
 	end
