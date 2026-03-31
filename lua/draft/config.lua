@@ -9,6 +9,7 @@ local defaults = {
 	-- Configuration for core module
 	core = {
 		repleace_dash = "--",
+		repleace_ellipsis = "...",
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
@@ -52,6 +53,7 @@ local function post_validate()
 			move_by_visual_lines = { M.configuration.core.move_by_visual_lines, "boolean", false },
 			smart_quotes = { M.configuration.core.smart_quotes, "boolean", false },
 			repleace_dash = { M.configuration.core.repleace_dash, { "string", "boolean" }, false },
+			repleace_ellipsis = { M.configuration.core.repleace_ellipsis, { "string", "boolean" }, false },
 			auto_turn_page = { M.configuration.core.auto_turn_page, "boolean", false },
 		})
 	end

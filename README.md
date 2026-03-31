@@ -117,6 +117,7 @@ Defualt options:
 	-- Configuration for core module
 	core = {
 		repleace_dash = "--",
+		repleace_ellipsis = "...",
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,

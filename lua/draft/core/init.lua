@@ -40,6 +40,9 @@ function M.setup()
 	if core_config.repleace_dash then
 		set_activate(require("draft.core.auto_repleace").dash_keymap)
 	end
+	if core_config.repleace_ellipsis then
+		set_activate(require("draft.core.auto_repleace").ellipsis_keymap)
+	end
 	if core_config.smart_quotes then
 		set_activate(require("draft.core.auto_repleace").quotes_keymap)
 	end

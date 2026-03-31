@@ -26,6 +26,11 @@ function M.dash_keymap()
 	vim.keymap.set("i", core_config.repleace_dash, config.dash_symbol, { buffer = true })
 end
 
+-- Map key for repleacement of ellipsis symbol
+function M.ellipsis_keymap()
+	vim.keymap.set("i", core_config.repleace_ellipsis, "…", { buffer = true })
+end
+
 -- Map key for repleacement of smart quotes
 function M.quotes_keymap()
 	vim.keymap.set("i", QUOTE.straight, function()
