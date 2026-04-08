@@ -137,6 +137,8 @@ Defualt options:
 		comment_hl = "NonText",
 		header_hl = "Title",
 	},
+
+	nvim_treesitter_integration = true,
 }
 ```
 

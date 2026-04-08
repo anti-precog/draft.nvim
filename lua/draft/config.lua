@@ -26,10 +26,13 @@ local defaults = {
 		comment_hl = "NonText",
 		header_hl = "Title",
 	},
+
+	nvim_treesitter_integration = true,
 }
 
 local function pre_validate(opts)
 	vim.validate({
+		nvim_treesittertegration = { opts.nvim_treesitter_integration, "boolean", true },
 		dash_symbol = {
 			opts.dash_symbol,
 			function(v)
