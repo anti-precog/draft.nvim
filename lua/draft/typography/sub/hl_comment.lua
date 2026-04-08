@@ -9,6 +9,7 @@ local function is_comment()
 end
 
 -- a submodule to highlight comments
+---@deprecated Use nvim_treesitter_integration
 ---@class HLComment
 local M = {}
 

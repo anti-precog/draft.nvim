@@ -74,9 +74,6 @@ function M.init()
 	local typo_config = require("draft.config").configuration.typography
 
 	add_step(clear_decoration_for_selected_line)
-	if typo_config.comment_hl then
-		add_step(require("draft.typography.sub.hl_comment").try_highlight)
-	end
 	if typo_config.center_asterix then
 		add_step(require("draft.typography.sub.headliner").try_center_asterix)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_asterix)
@@ -93,12 +90,6 @@ function M.init()
 	end
 	if typo_config.indent_size > 0 then
 		add_step(require("draft.typography.sub.indenter").make_indent)
-	end
-	if typo_config.quote_hl then
-		add_step(require("draft.typography.sub.hl_quote").highlight)
-	end
-	if typo_config.dialogue_hl then
-		add_step(require("draft.typography.sub.hl_dialogue").highlight)
 	end
 	return M
 end

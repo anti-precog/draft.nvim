@@ -21,10 +21,14 @@ local defaults = {
 		indent_size = 4,
 		center_header = false,
 		center_asterix = true,
-		dialogue_hl = "Statement",
-		quote_hl = "Statement",
-		comment_hl = "NonText",
-		header_hl = "Title",
+		header_hl = false,
+
+		---@depracated Use nvim_treesitter_integration
+		dialogue_hl = false,
+		---@depracated Use nvim_treesitter_integration
+		quote_hl = false,
+		---@depracated Use nvim_treesitter_integration
+		comment_hl = false,
 	},
 
 	nvim_treesitter_integration = true,

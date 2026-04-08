@@ -4,6 +4,7 @@ local typo_config = global.configuration.typography
 local selected_line = require("draft.typography.line")
 
 -- A submodule to highlight quotes
+---@deprecated Use nvim_treesitter_integration
 ---@class HlQuotes
 local M = {}
 

@@ -72,42 +72,6 @@ Proposed (out of box) setup:
 ```
 </details>
 
-Example with additionl custom highlight groups.
-
-<details>
-<summary>Installation snippet.</summary>
-
-```lua
-{
-	"anti-precog/draft.nvim",
-	ft = "draft",
-	init = function()
-		-- add filetype before lazy load
-		vim.filetype.add({
-			extension = {
-				draft = "draft",
-			},
-		})
-	end,
-    config = function()
-		-- add new highlight group
-		vim.api.nvim_set_hl(0, "Italic", { italic = true })
-		-- load main module
-		require("draft").setup({
-			-- your configuration comes here
-			-- refer to the configuration section below
-			typography = {
-				center_header = false,
-				header_hl = false,
-				quote_hl = "Italic",
-				dialogue_hl = "Italic",
-			},
-		})
-	end,
-}
-```
-</details>
-
 ## Configuration
 
 Defualt options:
@@ -132,9 +96,6 @@ Defualt options:
 		indent_size = 4,
 		center_header = false,
 		center_asterix = true,
-		dialogue_hl = "Statement",
-		quote_hl = "Statement",
-		comment_hl = "NonText",
 		header_hl = "Title",
 	},
 

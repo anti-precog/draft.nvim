@@ -11,6 +11,7 @@ local function is_start_with_dash()
 end
 
 -- A submodule to highlight dialogues
+---@deprecated Use nvim_treesitter_integration
 ---@class HLDialogue
 local M = {}
 
