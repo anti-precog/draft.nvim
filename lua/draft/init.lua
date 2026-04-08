@@ -1,4 +1,4 @@
-local function nvim_treesitter_integrate()
+local function nvim_treesitter_register()
 	local parsers = require("nvim-treesitter.parsers")
 	local parsers_config = parsers.get_parser_configs()
 
@@ -10,10 +10,6 @@ local function nvim_treesitter_integrate()
 		},
 		filetype = "draft",
 	}
-
-	if not parsers.has_parser("draft") then
-		vim.cmd("TSInstall draft")
-	end
 end
 
 -- Main moduel
@@ -25,7 +21,7 @@ function draft.setup(opts)
 	local config = require("draft.config").setup(opts).configuration
 
 	if config.nvim_treesitter_integration then
-		nvim_treesitter_integrate()
+		nvim_treesitter_register()
 	end
 
 	if config.core then
