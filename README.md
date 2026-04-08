@@ -102,7 +102,6 @@ Example with additionl custom highlight groups.
 				quote_hl = "Italic",
 				dialogue_hl = "Italic",
 			},
-			paginator = true,
 		})
 	end,
 }
