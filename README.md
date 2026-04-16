@@ -88,7 +88,6 @@ Defualt options:
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
-		skip_meta_lines = true, -- experimental
 	},
 
 	-- Configuration for typography module
@@ -99,7 +98,12 @@ Defualt options:
 		header_hl = "Title",
 	},
 
-	nvim_treesitter_integration = true,
+	-- Nvim-tree-sitter integration
+	treesitter_integration = {
+		skip_meta_lines = false,
+		icons = true,
+	},
+
 }
 ```
 

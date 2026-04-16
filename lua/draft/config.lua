@@ -31,7 +31,7 @@ local defaults = {
 	},
 
 	treesitter_integration = {
-		skip_meta_lines = false,
+		skip_meta_lines = true,
 		icons = true,
 	},
 }
