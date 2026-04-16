@@ -1,7 +1,7 @@
 local utils = require("draft.utils")
 
 ---@param text string Line to check
----@return boolean is_meta Is the text meta
+---@return boolean is_meta Is the text start with @ or #
 local function is_meta(text)
 	return text:match("^[@#].*")
 end
@@ -10,24 +10,24 @@ end
 ---@class Skipper
 local M = {}
 
-local prev_line = -1
+local prev_cursor_line_nr = -1
 
 function M.try_skip()
-	local current_line = utils.get_cursor_line_nr()
-	local last_line = utils.get_last_line_nr()
+	local cursor_line_nr = utils.get_cursor_line_nr()
+	local last_line_nr = utils.get_last_line_nr()
 
-	if current_line > prev_line then
-		local text = vim.fn.getline(current_line)
+	if cursor_line_nr > prev_cursor_line_nr then
+		local text = vim.fn.getline(cursor_line_nr)
 		while is_meta(text) do
 			vim.cmd("normal! j")
-			if current_line == last_line then
+			if cursor_line_nr == last_line_nr then
 				break
 			end
-			current_line = utils.get_cursor_line_nr()
-			text = vim.fn.getline(current_line)
+			cursor_line_nr = utils.get_cursor_line_nr()
+			text = vim.fn.getline(cursor_line_nr)
 		end
 	end
-	prev_line = current_line
+	prev_cursor_line_nr = cursor_line_nr
 end
 
 return M

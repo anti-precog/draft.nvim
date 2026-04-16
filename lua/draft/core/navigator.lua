@@ -106,7 +106,7 @@ function M.commands()
 	})
 
 	vim.api.nvim_buf_create_user_command(0, "NextPage", function()
-		local choice = vim.fn.confirm("Page", "Next", 1)
+		local choice = vim.fn.confirm("Next page", "Open\nkback", 1)
 		if choice == 1 then
 			turn_page()
 		end
@@ -115,7 +115,7 @@ function M.commands()
 	})
 
 	vim.api.nvim_buf_create_user_command(0, "PrevPage", function()
-		local choice = vim.fn.confirm("Page", "Prev", 1)
+		local choice = vim.fn.confirm("Prev page", "Open\njback", 1)
 		if choice == 1 then
 			return_page()
 		end

@@ -8,11 +8,10 @@ end
 
 ---@return boolean is_group Is above decorated line group head
 local function is_group_head_above()
-	local row_id = selected_line.row_id
-	if row_id == 0 then
+	if selected_line.row_id == 0 then
 		return false
 	end
-	local row_above = row_id - 1
+	local row_above = selected_line.row_id - 1
 	local text = vim.api.nvim_buf_get_lines(0, row_above, row_above + 1, false)[1]
 
 	return text:match("^[@].*")
