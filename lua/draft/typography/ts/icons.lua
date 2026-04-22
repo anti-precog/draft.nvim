@@ -40,11 +40,12 @@ function M.try_set_icon()
 	if is_end_group() then
 		icons = "—"
 	elseif is_group_head() then
-		icons = "↓"
+		--icons = "↓"
+		icons = "@"
 	end
 	if is_tag() then
 		if is_group_head_above() then
-			icons = "↓"
+			icons = "@"
 		end
 		icons = icons .. "#"
 	end

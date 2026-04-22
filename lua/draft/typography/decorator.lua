@@ -92,6 +92,9 @@ function M.init()
 		add_step(require("draft.typography.sub.headliner").try_hl_header)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_rehl_header)
 	end
+
+	add_step(require("draft.typography.sub.hl_marker").highlight)
+
 	if typo_config.indent_size > 0 then
 		add_step(require("draft.typography.sub.indenter").try_make_indent)
 	end
