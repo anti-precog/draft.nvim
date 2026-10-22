@@ -33,6 +33,7 @@ local defaults = {
 	treesitter_integration = {
 		skip_meta_lines = true,
 		icons = true,
+		info_bar = true,
 	},
 }
 
@@ -84,6 +85,7 @@ local function post_validate()
 		vim.validate({
 			skip_meta_lines = { M.configuration.treesitter_integration.skip_meta_lines, "boolean", false },
 			icons = { M.configuration.treesitter_integration.icons, "boolean", false },
+			info_bar = { M.configuration.treesitter_integration.info_bar, "boolean", false },
 		})
 	end
 end

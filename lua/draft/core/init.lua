@@ -79,6 +79,17 @@ function M.setup()
 					desc = "load draft.core skipper",
 				})
 			end
+
+			if ts_config and ts_config.info_bar then
+				local status = require("draft.core.ts.status")
+				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+					group = group,
+					callback = function()
+						status.redraw()
+					end,
+					desc = "load draft.core status",
+				})
+			end
 		end,
 		desc = "load draft.core improvements",
 	})

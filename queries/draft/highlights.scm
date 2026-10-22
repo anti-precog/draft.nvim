@@ -1,6 +1,6 @@
 ; basic
 (narrative) @text
-(comment) @comment
+(comment) @error
 (speech) @function
 
 ; groups
