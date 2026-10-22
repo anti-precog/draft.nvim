@@ -26,7 +26,18 @@ function M.try_skip()
 			cursor_line_nr = utils.get_cursor_line_nr()
 			text = vim.fn.getline(cursor_line_nr)
 		end
+	elseif cursor_line_nr < prev_cursor_line_nr then
+		local text = vim.fn.getline(cursor_line_nr)
+		while is_meta(text) do
+			vim.cmd("normal! k")
+			if cursor_line_nr == last_line_nr then
+				break
+			end
+			cursor_line_nr = utils.get_cursor_line_nr()
+			text = vim.fn.getline(cursor_line_nr)
+		end
 	end
+
 	prev_cursor_line_nr = cursor_line_nr
 end
 
