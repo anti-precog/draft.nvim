@@ -85,7 +85,7 @@ function M.try_hl_header()
 	end
 	if is_header() then
 		if typo_config.indent_size > 0 then
-			require("draft.typography.sub.indenter").make_indent()
+			require("draft.typography.sub.indenter").try_make_indent()
 		end
 
 		vim.api.nvim_buf_add_highlight(
@@ -138,7 +138,7 @@ function M.try_rehl_header()
 		clear_line()
 
 		if typo_config.indent_size > 0 then
-			require("draft.typography.sub.indenter").make_indent()
+			require("draft.typography.sub.indenter").try_make_indent()
 		end
 
 		vim.api.nvim_buf_add_highlight(
