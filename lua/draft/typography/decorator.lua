@@ -76,7 +76,8 @@ function M.init()
 
 	add_step(clear_decoration_for_selected_line)
 	if ts_config and ts_config.icons then
-		add_step(require("draft.typography.ts.icons").try_set_icon)
+		add_step(require("draft.typography.ts.icons").try_set_group_icon)
+		add_step(require("draft.typography.ts.icons").try_set_summary_icon)
 	end
 	if typo_config.center_asterix then
 		add_step(require("draft.typography.sub.headliner").try_center_asterix)

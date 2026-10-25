@@ -1,24 +1,25 @@
 ; basic
 (narrative) @text
-(comment) @error
-(speech) @function
+(speech) @string
 
 ; groups
 ((head) @keyword
- (#set! conceal "")
- (#set! conceal_lines ""))
-((end) @keyword
- (#set! conceal "")
- (#set! conceal_lines ""))
+ (#set! conceal ""))
+((stop) @keyword
+ (#set! conceal ""))
 
-; tags
-((tags) @keyword
- (#set! conceal "")
- (#set! conceal_lines ""))
+; comments
+(comment) @comment
 
-(tags
-  (tag) @error)
+; headers
+(header) @markup.strong
+
+; summaries
+((summary) @markup.underline
+  (#set! conceal "")
+  (#set! conceal_lines ""))
 
 ; other
 (ERROR) @error
 (MISSING) @missing
+
