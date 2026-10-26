@@ -49,9 +49,9 @@ function M.set_line(win_id, buf_id, row_id, text)
 end
 
 -- Run all decoration steps in order
----@param clean boolean Clean line before decorate
-function M.run(clean)
-	local first_step_id = clean and 1 or 2
+---@param with_clearing boolean Clean line before decorate
+function M.run(with_clearing)
+	local first_step_id = with_clearing and 1 or 2
 
 	for id = first_step_id, #decoration_steps do
 		if not decoration_steps[id]() then
@@ -75,14 +75,12 @@ function M.init()
 	local typo_config = require("draft.config").configuration.typography
 
 	add_step(clear_decoration_for_selected_line)
-	if ts_config and ts_config.icons then
-		add_step(require("draft.typography.ts.icons").try_set_group_icon)
-		add_step(require("draft.typography.ts.icons").try_set_summary_icon)
-	end
+
 	if typo_config.center_asterix then
 		add_step(require("draft.typography.sub.headliner").try_center_asterix)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_asterix)
 	end
+	--[[
 	if typo_config.center_header and typo_config.header_hl then
 		add_step(require("draft.typography.sub.headliner").try_make_title)
 		add_step(require("draft.typography.sub.headliner").try_remake_title)
@@ -93,9 +91,14 @@ function M.init()
 		add_step(require("draft.typography.sub.headliner").try_hl_header)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_rehl_header)
 	end
+	--]]
 
-	add_step(require("draft.typography.sub.hl_marker").highlight)
+	--add_step(require("draft.typography.sub.hl_marker").highlight)
 
+	if ts_config and ts_config.icons then
+		add_step(require("draft.typography.ts.icons").try_set_group_icon)
+		-- add_step(require("draft.typography.ts.icons").try_set_summary_icon)
+	end
 	if typo_config.indent_size > 0 then
 		add_step(require("draft.typography.sub.indenter").try_make_indent)
 	end

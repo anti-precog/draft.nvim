@@ -3,16 +3,17 @@
 (speech) @string
 
 ; groups
-((head) @keyword
+((header) @comment
  (#set! conceal ""))
-((stop) @keyword
+((footer) @comment
  (#set! conceal ""))
 
 ; comments
 (comment) @comment
 
+; section
 ; headers
-(header) @markup.strong
+(title) @markup.underline
 
 ; summaries
 ((summary) @markup.underline

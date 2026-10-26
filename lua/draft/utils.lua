@@ -1,6 +1,16 @@
 ---@class Utils
 local M = {}
 
+---@return userdata|nil TSNode node from selected line
+---@param buf_id number
+---@param row_id number
+function M.get_node(buf_id, row_id)
+	return vim.treesitter.get_node({
+		bufnr = buf_id,
+		pos = { row_id, 0 },
+	})
+end
+
 -- Check nvim INSERT mode status
 ---@return boolean is_insert_mode Status of current vim INSERT mode
 function M.is_insert_mode()
