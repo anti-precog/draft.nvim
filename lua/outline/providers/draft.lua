@@ -16,11 +16,9 @@ end
 function M.request_symbols(callback, opts)
 	opts = opts or {}
 	local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
-	vim.notify("Draft provider: request_symbols wywołane dla bufora " .. bufnr, vim.log.levels.INFO)
-	-- 1. Pobierz parser Tree-sittera dla bufora
+
 	local ok, parser = pcall(vim.treesitter.get_parser, bufnr, "draft")
 	if not ok or not parser then
-		vim.notify("Draft provider: Nie znaleziono parsera Tree-sitter dla 'draft'!", vim.log.levels.WARN)
 		callback({}, opts)
 		return
 	end
@@ -33,63 +31,100 @@ function M.request_symbols(callback, opts)
 
 	local root = tree:root()
 
-	-- 2. Pobierz zapytanie z queries/draft/tags.scm (Neovim ładuje je automatycznie po nazwie filetype)
 	local query_ok, query = pcall(vim.treesitter.query.get, "draft", "tags")
 	if not query_ok or not query then
-		vim.notify(
-			"Draft provider: BŁĄD! Nie udało się załadować zapytań z queries/draft/tags.scm",
-			vim.log.levels.ERROR
-		)
 		callback({}, opts)
 		return
-	else
-		vim.notify("Draft provider: Zapytanie tags.scm załadowane pomyślnie!", vim.log.levels.INFO)
 	end
-	--
 
-	--
-	local symbols = {}
-	local match_count = 0
+	local raw_symbols = {}
 
-	-- 3. Wykonaj zapytanie na drzewie AST i sformatuj wyniki
+	-- Wykonaj zapytanie na drzewie AST
 	for _, match, metadata in query:iter_matches(root, bufnr, 0, -1) do
-		match_count = match_count + 1
-		local name, node, range
+		local name, range, is_group
 
-		-- Odczytujemy capture @name oraz @definition.* z Twojego pliku tags.scm
 		for id, nodes in pairs(match) do
 			local capture_name = query.captures[id]
 			if capture_name == "name" then
-				-- Jeśli nodes to tablica lub pojedynek węzeł
-				node = type(nodes) == "table" and nodes[1] or nodes
+				local node = type(nodes) == "table" and nodes[1] or nodes
 				name = vim.treesitter.get_node_text(node, bufnr)
-			elseif capture_name:match("^definition") then
+			elseif capture_name == "definition.section" then
 				local def_node = type(nodes) == "table" and nodes[1] or nodes
 				local start_row, start_col, end_row, end_col = def_node:range()
 				range = {
 					start = { line = start_row, character = start_col },
 					["end"] = { line = end_row, character = end_col },
 				}
+				is_group = false
+			elseif capture_name == "definition.group" then
+				local def_node = type(nodes) == "table" and nodes[1] or nodes
+				local start_row, start_col, end_row, end_col = def_node:range()
+				range = {
+					start = { line = start_row, character = start_col },
+					["end"] = { line = end_row, character = end_col },
+				}
+				is_group = true
 			end
 		end
 
-		-- Jeśli znaleźliśmy nazwę i zakres, dodajemy do listy symboli
 		if name and range then
-			vim.notify("Symbol: " .. name .. " [linia " .. range.start.line .. "]", vim.log.levels.INFO)
-			table.insert(symbols, {
+			table.insert(raw_symbols, {
 				name = name,
-				kind = 12, -- Kod typu ikony (np. 12 to funkcja)
+				kind = is_group and 12 or 18, -- 18 = Section, 12 = Group
 				selectionRange = range,
 				range = range,
 				children = {},
-				detail = "draft section", -- Opcjonalny opis
+				is_group = is_group,
 			})
 		end
 	end
-	vim.notify("Draft provider: Znaleziono pasujących węzłów: " .. match_count, vim.log.levels.INFO)
-	vim.notify("Wszystkich symboli do przekazania: " .. #symbols, vim.log.levels.INFO)
-	-- 4. Zwróć tablicę symboli do outline.nvim przez callback
-	callback(symbols, opts)
+
+	-- Funkcja pomocnicza: czy zakres sekcji zawiera zakres grupy
+	local function contains(parent, child)
+		local p_start = parent.range.start
+		local p_end = parent.range["end"]
+		local c_start = child.range.start
+		local c_end = child.range["end"]
+
+		local start_after = (c_start.line > p_start.line)
+			or (c_start.line == p_start.line and c_start.character >= p_start.character)
+		local end_before = (c_end.line < p_end.line)
+			or (c_end.line == p_end.line and c_end.character <= p_end.character)
+
+		return start_after and end_before
+	end
+
+	-- Budowanie hierarchii drzewa
+	local tree_symbols = {}
+	local sections = {}
+
+	-- Krok 1: Wrzucamy najpierw wszystkie sekcje na najwyższy poziom
+	for _, sym in ipairs(raw_symbols) do
+		if not sym.is_group then
+			table.insert(sections, sym)
+			table.insert(tree_symbols, sym)
+		end
+	end
+
+	-- Krok 2: Rozdzielamy grupy (do sekcji lub na główny poziom)
+	for _, sym in ipairs(raw_symbols) do
+		if sym.is_group then
+			local placed = false
+			for _, sec in ipairs(sections) do
+				if contains(sec, sym) then
+					table.insert(sec.children, sym)
+					placed = true
+					break
+				end
+			end
+			-- Jeśli grupa nie znajduje się w żadnej sekcji, ląduje na samej górze drzewa
+			if not placed then
+				table.insert(tree_symbols, sym)
+			end
+		end
+	end
+
+	callback(tree_symbols, opts)
 end
 
 return M

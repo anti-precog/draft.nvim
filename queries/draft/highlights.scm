@@ -12,13 +12,13 @@
 (comment) @comment
 
 ; section
-; headers
 (title) @module
 
+; TODO: to remove
 ; summaries
-((summary) @markup.underline
-  (#set! conceal "")
-  (#set! conceal_lines ""))
+; ((summary) @markup.underline
+;  (#set! conceal "")
+;  (#set! conceal_lines ""))
 
 ; other
 (ERROR) @error
