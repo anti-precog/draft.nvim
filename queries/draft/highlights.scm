@@ -3,9 +3,9 @@
 (speech) @string
 
 ; groups
-((header) @comment
+((header) @comment.note
  (#set! conceal ""))
-((footer) @comment
+((footer) @comment.warning
  (#set! conceal ""))
 
 ; comments
@@ -13,7 +13,7 @@
 
 ; section
 ; headers
-(title) @markup.underline
+(title) @module
 
 ; summaries
 ((summary) @markup.underline
