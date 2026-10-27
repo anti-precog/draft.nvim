@@ -1,7 +1,7 @@
-; Definiujemy sekcje jako główne elementy drzewa
+;; Definiujemy sekcje jako główne elementy drzewa
 (section
-  (title) @name) @item
+  (title) @name) @definition.section
 
-; Definiujemy grupy jako podmioty w drzewie
+;; Definiujemy grupy jako podmioty w drzewie
 (group
-  (header) @name) @item
+  (header) @name) @definition.group
