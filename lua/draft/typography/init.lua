@@ -104,6 +104,19 @@ function M.setup()
 			desc = "post <CR> decorate",
 		})
 	end
+
+	-- HACK: Redraw again after set filetype to prevent decoraor lag on first file open
+	vim.api.nvim_create_autocmd("BufWinEnter", {
+		callback = function(args)
+			if is_draft_type(args.buf) then
+				vim.schedule(function()
+					if vim.api.nvim_buf_is_valid(args.buf) then
+						vim.cmd("redraw!")
+					end
+				end)
+			end
+		end,
+	})
 end
 
 return M
