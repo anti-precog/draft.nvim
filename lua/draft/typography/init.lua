@@ -99,6 +99,7 @@ function M.setup()
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "draft",
 			callback = function(args)
+				vim.treesitter.start(args.buf)
 				setup_post_cr_decore_mapping(args.buf)
 			end,
 			desc = "post <CR> decorate",
