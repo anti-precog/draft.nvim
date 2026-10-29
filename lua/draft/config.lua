@@ -4,7 +4,7 @@
 ---@field typography table|boolean
 local defaults = {
 	-- select how to recognize dialogues as em-dash or en-dash
-	dash_symbol = "em-dash",
+	dash_symbol = "em-dash", -- WARN: treesitter do not know about two versions
 
 	-- Configuration for core module
 	core = {
@@ -17,11 +17,13 @@ local defaults = {
 
 	-- Configuration for typography module
 	typography = {
-		indent_size = 4,
-		center_header = false,
+		indent_size = 4, -- WARN: Now it depends on treesitter
 		center_asterix = true,
-		header_hl = false,
 
+		---@depracated Use treesitter_integration
+		center_header = false, -- TODO: remove headers
+		---@depracated Use treesitter_integration
+		header_hl = false, -- TODO: remove headers
 		---@depracated Use treesitter_integration
 		dialogue_hl = false,
 		---@depracated Use treesitter_integration
@@ -30,10 +32,11 @@ local defaults = {
 		comment_hl = false,
 	},
 
+	-- TODO: make it not optional
 	treesitter_integration = {
-		skip_meta_lines = true,
-		icons = true,
-		info_bar = true,
+		skip_meta_lines = true, -- TODO: make it separatly for sections and groups
+		icons = true, -- TODO: recreate icons, add frames for groups
+		info_bar = true, -- consider ro remove or improve for beter functionality
 	},
 }
 
