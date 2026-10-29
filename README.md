@@ -98,14 +98,11 @@ Defualt options:
 		indent_size = 4,
 		center_header = false,
 		center_asterix = true,
-		header_hl = false,
-	},
 
-	-- Nvim-tree-sitter integration
-	treesitter_integration = {
+    	-- tree-sitter integration:
 		skip_meta_lines = true,
-		icons = true,
-		info_bar = true,
+		group_frames = true,
+		info_bar = false,
 	},
 
 }

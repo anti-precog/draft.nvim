@@ -11,6 +11,12 @@ function M.get_node(buf_id, row_id)
 	})
 end
 
+---@param buf_id integer Buffer handle
+---@return boolean status Is buffer filetype draft
+function M.is_draft_type(buf_id)
+	return "draft" == vim.bo[buf_id].filetype
+end
+
 -- Check nvim INSERT mode status
 ---@return boolean is_insert_mode Status of current vim INSERT mode
 function M.is_insert_mode()

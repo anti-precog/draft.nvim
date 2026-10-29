@@ -4,12 +4,6 @@ local typo_config = global.configuration.typography
 local utils = require("draft.utils")
 
 ---@param buf_id integer Buffer handle
----@return boolean status Is buffer filetype draft
-local function is_draft_type(buf_id)
-	return "draft" == vim.bo[buf_id].filetype
-end
-
----@param buf_id integer Buffer handle
 ---@param row_id integer Window row position
 ---@return string text Text from the line
 local get_line_text = function(buf_id, row_id)
@@ -64,8 +58,9 @@ function M.setup()
 
 	vim.api.nvim_set_decoration_provider(global.namespace, {
 
+		-- NOMRAL & VISUAL modes
 		on_win = function(_, win_id, buf_id, top_row_id, bottom_row_id)
-			if not is_draft_type(buf_id) then
+			if not utils.is_draft_type(buf_id) then
 				return false -- stop
 			end
 
@@ -84,6 +79,7 @@ function M.setup()
 			return false -- stop
 		end,
 
+		-- INSERT mode:
 		on_line = function(_, win_id, buf_id, row_id)
 			local cursor_row_id = get_cursor_row_id(win_id)
 
@@ -95,29 +91,39 @@ function M.setup()
 			end
 		end,
 	})
-	if typo_config.center_asterix or typo_config.center_header then
+
+	if global.has_parser then
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "draft",
 			callback = function(args)
 				vim.treesitter.start(args.buf)
+			end,
+			desc = "activate tree-sitter parser for draft",
+		})
+		-- HACK: Redraw again after set filetype to prevent decoraor lag on first file open
+		vim.api.nvim_create_autocmd("BufWinEnter", {
+			callback = function(args)
+				if utils.is_draft_type(args.buf) then
+					vim.schedule(function()
+						if vim.api.nvim_buf_is_valid(args.buf) then
+							vim.cmd("redraw!")
+						end
+					end)
+				end
+			end,
+			desc = "refresh decoration for draft",
+		})
+	end
+
+	if typo_config.center_asterix or typo_config.center_header then
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "draft",
+			callback = function(args)
 				setup_post_cr_decore_mapping(args.buf)
 			end,
 			desc = "post <CR> decorate",
 		})
 	end
-
-	-- HACK: Redraw again after set filetype to prevent decoraor lag on first file open
-	vim.api.nvim_create_autocmd("BufWinEnter", {
-		callback = function(args)
-			if is_draft_type(args.buf) then
-				vim.schedule(function()
-					if vim.api.nvim_buf_is_valid(args.buf) then
-						vim.cmd("redraw!")
-					end
-				end)
-			end
-		end,
-	})
 end
 
 return M

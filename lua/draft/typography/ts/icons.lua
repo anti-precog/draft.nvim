@@ -146,33 +146,4 @@ function M.try_set_group_icon()
 	--return true
 end
 
--- Add icon to next row
----@return NextStep next_step Return true if is NOT a comment
-function M.try_set_summary_icon()
-	if selected_line.row_id == 0 then
-		return true
-	end
-	local prev_row = selected_line.row_id - 1
-
-	local icons = ""
-	if is_summary() then
-		icons = "@"
-		if is_end_group_head_above() then
-			icons = "—@"
-		elseif is_group_head_above() then
-			icons = "#@"
-		end
-	end
-	if icons ~= "" then
-		vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, prev_row, 0, {
-			sign_text = icons,
-			sign_hl_group = "NonText",
-		})
-
-		return false
-	end
-
-	return true
-end
-
 return M

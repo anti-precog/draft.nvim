@@ -1,4 +1,4 @@
----@class Config
+--@class Config
 ---@field dash_symbol string
 ---@field core table|boolean
 ---@field typography table|boolean
@@ -17,32 +17,27 @@ local defaults = {
 
 	-- Configuration for typography module
 	typography = {
-		indent_size = 4, -- WARN: Now it depends on treesitter
+		indent_size = 4,
 		center_asterix = true,
+		center_header = true,
 
-		---@depracated Use treesitter_integration
-		center_header = false, -- TODO: remove headers
-		---@depracated Use treesitter_integration
-		header_hl = false, -- TODO: remove headers
 		---@depracated Use treesitter_integration
 		dialogue_hl = false,
 		---@depracated Use treesitter_integration
 		quote_hl = false,
 		---@depracated Use treesitter_integration
 		comment_hl = false,
-	},
 
-	-- TODO: make it not optional
-	treesitter_integration = {
+		-- NOTE: required tree-sitter:
 		skip_meta_lines = true, -- TODO: make it separatly for sections and groups
-		icons = true, -- TODO: recreate icons, add frames for groups
-		info_bar = true, -- consider ro remove or improve for beter functionality
+		group_frames = true, -- TODO: recreate icons, add frames for groups
+		icons = false, -- TODO: recreate icons, add frames for groups
+		info_bar = false, -- consider ro remove or improve for beter functionality
 	},
 }
 
 local function pre_validate(opts)
 	vim.validate({
-		treesitter_integration = { opts.treesitter_integration, { "table", "boolean" }, true },
 		dash_symbol = {
 			opts.dash_symbol,
 			function(v)
@@ -60,6 +55,7 @@ local M = {}
 
 ---@type Config
 M.configuration = defaults
+M.has_parser = vim.treesitter.language.add("draft")
 
 local function post_validate()
 	if type(M.configuration.core) == "table" then
@@ -80,15 +76,11 @@ local function post_validate()
 			dialogue_hl = { M.configuration.typography.dialogue_hl, { "string", "boolean" }, false },
 			quote_hl = { M.configuration.typography.quote_hl, { "string", "boolean" }, false },
 			comment_hl = { M.configuration.typography.comment_hl, { "string", "boolean" }, false },
-			header_hl = { M.configuration.typography.header_hl, { "string", "boolean" }, false },
-		})
-	end
 
-	if type(M.configuration.treesitter_integration) == "table" then
-		vim.validate({
-			skip_meta_lines = { M.configuration.treesitter_integration.skip_meta_lines, "boolean", false },
-			icons = { M.configuration.treesitter_integration.icons, "boolean", false },
-			info_bar = { M.configuration.treesitter_integration.info_bar, "boolean", false },
+			skip_meta_lines = { M.configuration.typography.skip_meta_lines, "boolean", false },
+			group_frames = { M.configuration.typography.group_frames, "boolean", true },
+			icons = { M.configuration.typography.icons, "boolean", false },
+			info_bar = { M.configuration.typography.info_bar, "boolean", false },
 		})
 	end
 end

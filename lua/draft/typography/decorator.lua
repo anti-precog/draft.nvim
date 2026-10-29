@@ -1,7 +1,7 @@
 ---@alias NextStep boolean Continue or break next step
 
 local global = require("draft.config")
-local ts_config = global.configuration.treesitter_integration
+local typo_config = require("draft.config").configuration.typography
 local selected_line = require("draft.typography.line")
 
 ---@type table<number, fun()> All implemented decoration steps
@@ -10,12 +10,12 @@ local decoration_steps = {}
 ---@type table<number, fun()> Post decoratipn steps
 local post_decoration_steps = {}
 
----@param func fun() Next action to do in ordered decoration steps
+---@param func fun(): NextStep Next action to do in ordered decoration steps
 local function add_step(func)
 	table.insert(decoration_steps, func)
 end
 
----@param func fun() Next action to do in post decoration proces
+---@param func fun(): NextStep Next action to do in post decoration proces
 local function add_post_CR_step(func)
 	table.insert(post_decoration_steps, func)
 end
@@ -72,35 +72,23 @@ end
 -- Init decorator
 ---@return Decorator
 function M.init()
-	local typo_config = require("draft.config").configuration.typography
+	add_step(clear_decoration_for_selected_line) -- clear old decoration
 
-	add_step(clear_decoration_for_selected_line)
-
+	-- PERF: for best performance: the fastest and next the most common steps shoud be first
+	-- reason: some of steps stops rest in the queue
+	if typo_config.center_header then
+		add_step(require("draft.typography.sub.headliner").try_center_header)
+		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_header)
+	end
 	if typo_config.center_asterix then
 		add_step(require("draft.typography.sub.headliner").try_center_asterix)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_asterix)
 	end
-	--[[
-	if typo_config.center_header and typo_config.header_hl then
-		add_step(require("draft.typography.sub.headliner").try_make_title)
-		add_step(require("draft.typography.sub.headliner").try_remake_title)
-	elseif typo_config.center_header then
-		add_step(require("draft.typography.sub.headliner").try_center_header)
-		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_header)
-	elseif typo_config.header_hl then
-		add_step(require("draft.typography.sub.headliner").try_hl_header)
-		add_post_CR_step(require("draft.typography.sub.headliner").try_rehl_header)
-	end
-	--]]
-
-	--add_step(require("draft.typography.sub.hl_marker").highlight)
-
-	if ts_config and ts_config.icons then
-		add_step(require("draft.typography.ts.icons").try_set_group_icon)
-		-- add_step(require("draft.typography.ts.icons").try_set_summary_icon)
+	if global.has_parser and typo_config.group_frames then
+		add_step(require("draft.typography.ts.frames").try_set_frame_line)
 	end
 	if typo_config.indent_size > 0 then
-		add_step(require("draft.typography.sub.indenter").try_make_indent)
+		add_step(require("draft.typography.sub.indenter").try_make_indent_by_regex)
 	end
 	return M
 end
