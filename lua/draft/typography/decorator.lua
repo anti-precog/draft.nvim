@@ -78,7 +78,7 @@ function M.init()
 		add_step(require("draft.typography.sub.headliner").try_center_asterix)
 		add_post_CR_step(require("draft.typography.sub.headliner").try_recenter_asterix)
 	end
-	if global.has_parser and typo_config.group_frames then
+	if global.has_parser and typo_config.group_frames ~= "none" then
 		add_step(require("draft.typography.ts.frames").try_set_frame_line)
 	end
 	if typo_config.indent_size > 0 then

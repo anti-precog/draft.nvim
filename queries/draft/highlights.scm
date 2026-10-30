@@ -1,24 +1,22 @@
 ; basic
-(narrative) @text
-(speech) @string
+(narrative) @none
+(narrative) @spell
+(speech) @markup
+(speech) @spell
+(asterix) @label
 
 ; groups
-((header) @comment.note
+((header) @comment
  (#set! conceal ""))
-((footer) @comment.warning
+((footer) @comment
  (#set! conceal ""))
 
 ; comments
 (comment) @comment
+(comment) @nospell
 
 ; section
-(title) @module
-
-; TODO: to remove
-; summaries
-; ((summary) @markup.underline
-;  (#set! conceal "")
-;  (#set! conceal_lines ""))
+(title) @label
 
 ; other
 (ERROR) @error

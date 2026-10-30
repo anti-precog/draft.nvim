@@ -8,8 +8,8 @@ local function is_asterix()
 	return selected_line.text:match("^%*+$")
 end
 
----@return boolean is_header check if current line represent header
-local function is_header()
+---@return boolean is_section check if current line represent section
+local function is_section()
 	return selected_line.text:match("^#")
 end
 
@@ -36,23 +36,23 @@ end
 ---@class Headliner
 local M = {}
 
--- Center if header
----@return NextStep next_step Return true if is NOT header or in insert mode
+-- Center if section
+---@return NextStep next_step Return true if is NOT section or in insert mode
 function M.try_center_header()
 	if utils.is_insert_mode() then
 		return true
 	end
-	if is_header() then
+	if is_section() then
 		make_center()
 		return false
 	end
 	return true
 end
 
--- Center if header with line decoration reset
----@return NextStep next_step Return true if is NOT header
+-- Center if section with line decoration reset
+---@return NextStep next_step Return true if is NOT section
 function M.try_recenter_header()
-	if is_header() then
+	if is_section() then
 		clear_line()
 		make_center()
 		return false
@@ -74,7 +74,7 @@ function M.try_center_asterix()
 end
 
 -- Center if asterix with line decoration reset
----@return NextStep next_step Return true if is NOT header
+---@return NextStep next_step Return true if is NOT asterix
 function M.try_recenter_asterix()
 	if is_asterix() then
 		clear_line()

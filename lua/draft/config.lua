@@ -19,7 +19,7 @@ local defaults = {
 	typography = {
 		indent_size = 4,
 		center_asterix = true,
-		center_header = true,
+		center_header = false,
 
 		---@depracated Use treesitter_integration
 		dialogue_hl = false,
