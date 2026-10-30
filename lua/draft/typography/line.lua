@@ -11,7 +11,7 @@ local line = {
 	text = nil,
 }
 
----@param integer namespace
+---@param namespace integer Clear the line from namespace -> potencial decorations
 function line:clear(namespace)
 	vim.api.nvim_buf_clear_namespace(self.buf_id, namespace, self.row_id, self.row_id + 1)
 end

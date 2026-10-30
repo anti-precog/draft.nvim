@@ -1,4 +1,4 @@
---@class Config
+---@class Config
 ---@field dash_symbol string
 ---@field core table|boolean
 ---@field typography table|boolean

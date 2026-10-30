@@ -29,6 +29,7 @@ function M.get_cursor_line_nr()
 end
 
 ---@return integer row_id Current postion of cursor
+-- HACK: duplicated in typography/init
 function M.get_cursor_row_id()
 	return M.get_cursor_line_nr() - 1
 end

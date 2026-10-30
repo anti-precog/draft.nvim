@@ -20,22 +20,27 @@ local function add_post_CR_step(func)
 	table.insert(post_decoration_steps, func)
 end
 
----@return NextStep next_step Allways return true
-local function clear_decoration_for_selected_line()
-	selected_line:clear(global.namespace)
-	return true
-end
-
 -- Decorate lines into paragraphs
 ---@class Decorator
 local M = {}
+
+function M.clear_decoration()
+	selected_line:clear(global.namespace)
+end
+
+---@param buf_id integer Buffer handle
+---@param begin_row_id integer Begin row to start clearing
+---@param end_row_id integer End row to stop clearing
+function M.clear_decoration_for_range(buf_id, begin_row_id, end_row_id)
+	vim.api.nvim_buf_clear_namespace(buf_id, global.namespace, begin_row_id, end_row_id + 1)
+end
 
 -- Set current line to decorate
 ---@param win_id integer Current decorated window id
 ---@param buf_id integer Current decorated buffer id
 ---@param row_id integer Current decorated row id
 ---@param text string Current decorated text
-function M.set_line(win_id, buf_id, row_id, text)
+function M.target(win_id, buf_id, row_id, text)
 	selected_line.win_id = win_id
 	selected_line.buf_id = buf_id
 	selected_line.row_id = row_id
@@ -43,12 +48,9 @@ function M.set_line(win_id, buf_id, row_id, text)
 end
 
 -- Run all decoration steps in order
----@param with_clearing boolean Clean line before decorate
-function M.run(with_clearing)
-	local first_step_id = with_clearing and 1 or 2
-
-	for id = first_step_id, #decoration_steps do
-		if not decoration_steps[id]() then
+function M.run()
+	for _, step in ipairs(decoration_steps) do
+		if not step() then
 			return
 		end
 	end
@@ -66,8 +68,6 @@ end
 -- Init decorator
 ---@return Decorator
 function M.init()
-	add_step(clear_decoration_for_selected_line) -- clear old decoration
-
 	-- PERF: for best performance: the fastest and next the most common steps shoud be first
 	-- reason: some of steps stops rest in the queue
 	if typo_config.center_header then
