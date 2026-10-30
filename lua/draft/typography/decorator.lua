@@ -22,13 +22,7 @@ end
 
 ---@return NextStep next_step Allways return true
 local function clear_decoration_for_selected_line()
-	-- HACK: duplicated funciton
-	vim.api.nvim_buf_clear_namespace(
-		selected_line.buf_id,
-		global.namespace,
-		selected_line.row_id,
-		selected_line.row_id + 1
-	)
+	selected_line:clear(global.namespace)
 	return true
 end
 

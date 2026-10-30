@@ -29,13 +29,7 @@ local function make_center()
 end
 
 local function clear_line()
-	-- HACK: duplicated funciton
-	vim.api.nvim_buf_clear_namespace(
-		selected_line.buf_id,
-		global.namespace,
-		selected_line.row_id,
-		selected_line.row_id + 1
-	)
+	selected_line:clear(global.namespace)
 end
 
 -- A submodule to decorate titles and asterixes

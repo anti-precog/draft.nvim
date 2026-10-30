@@ -11,4 +11,9 @@ local line = {
 	text = nil,
 }
 
+---@param integer namespace
+function line:clear(namespace)
+	vim.api.nvim_buf_clear_namespace(self.buf_id, namespace, self.row_id, self.row_id + 1)
+end
+
 return line
