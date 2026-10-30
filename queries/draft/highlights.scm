@@ -17,6 +17,7 @@
 
 ; section
 (title) @label
+(title) @nospell
 
 ; other
 (ERROR) @error

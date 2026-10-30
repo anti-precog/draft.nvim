@@ -70,8 +70,8 @@ end
 
 ---@param node userdata|nil TSNode to check if in node group
 ---@return boolean in_group
-local function is_in_group(node)
-	if not node then
+local function is_in_other_group(node)
+	if not node or node:type() == "footer" or node:type() == "header" then
 		return false
 	end
 	local parent = node:parent()
@@ -93,13 +93,13 @@ local M = {}
 -- PERF: This is slower function than regex so use it as one of the last step in decorator to avoid uncecceary slower tree-sitter comunication
 function M.try_set_frame_line()
 	if is_footer() then
-		if is_in_group(get_node_below()) then
+		if is_in_other_group(get_node_below()) then
 			draw_middle_line()
 		else
 			draw_bottom_line()
 		end
 	elseif is_header() then
-		if is_in_group(get_node_above()) then
+		if is_in_other_group(get_node_above()) then
 			draw_middle_line()
 		else
 			draw_top_line()
