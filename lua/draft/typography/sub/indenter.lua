@@ -8,7 +8,7 @@ local space = string.rep(" ", typo_config.indent_size)
 
 ---@return boolean is_comment Is actual decorated line commend
 local function is_not_paragraph()
-	return selected_line.text:match("^[\t >#].*")
+	return selected_line.text:match("^[\t ><#].*")
 end
 
 ---@return boolean is_correct_node Is actual decorated line proper to indent
