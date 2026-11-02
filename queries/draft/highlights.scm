@@ -1,8 +1,10 @@
 ; basic
 (narrative) @none
 (narrative) @spell
-(speech) @markup
+(speech) @string
 (speech) @spell
+(quote) @string
+(quote) @spell
 (asterix) @label
 
 ; groups
