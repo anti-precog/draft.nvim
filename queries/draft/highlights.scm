@@ -22,6 +22,10 @@
 (title) @label
 (title) @nospell
 
+((tag) @operator
+ (#set! conceal ""))
+
+
 ; other
 (ERROR) @error
 (MISSING) @missing
