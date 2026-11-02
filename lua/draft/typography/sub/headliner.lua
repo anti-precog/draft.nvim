@@ -14,9 +14,9 @@ local function is_section()
 end
 
 local function make_center()
-	local win_half = vim.api.nvim_win_get_width(selected_line.win_id) / 2 - 1
+	local win_half = vim.api.nvim_win_get_width(selected_line.win_id) / 2
 	local line_half = #selected_line.text / 2
-	local length = win_half - line_half
+	local length = win_half - line_half - 3
 	if length <= 0 then
 		return
 	end
