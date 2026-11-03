@@ -21,17 +21,10 @@ local function gather_lines(buf_id, begin_row_id, end_row_id)
 end
 
 ---@param win_id integer Window handle
----@return integer row_id Number of line where cursor is
--- HACK: duplicated in utils
-local function get_cursor_row_id(win_id)
-	return vim.api.nvim_win_get_cursor(win_id)[1] - 1
-end
-
----@param win_id integer Window handle
 ---@param row_id integer Number of line
 ---@return boolean is_cursor_on_line is cursor position is on the line
 local function is_cursor_on_line(win_id, row_id)
-	return get_cursor_row_id(win_id) == row_id
+	return utils.get_cursor_row_id() == row_id
 end
 
 ---@param top_row_id integer top visable real number of line
@@ -45,7 +38,7 @@ end
 local function setup_post_cr_decore_mapping(buf_id)
 	vim.keymap.set({ "i", "s" }, "<CR>", function()
 		local win_id = vim.api.nvim_get_current_win()
-		local cursor_row_id = get_cursor_row_id(win_id)
+		local cursor_row_id = utils.get_cursor_row_id()
 		if cursor_row_id >= 0 then
 			local content = get_line_content(buf_id, cursor_row_id)
 
