@@ -91,6 +91,10 @@ Defualt options:
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
+
+    	-- tree-sitter integration:
+		skip_meta_lines = true,
+		info_bar = false,
 	},
 
 	-- Configuration for typography module
@@ -100,9 +104,7 @@ Defualt options:
 		center_asterix = true,
 
     	-- tree-sitter integration:
-		skip_meta_lines = true,
 		group_frames = true,
-		info_bar = false,
 	},
 
 }

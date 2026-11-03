@@ -13,6 +13,9 @@ local defaults = {
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
+		-- NOTE: required tree-sitter:
+		skip_meta_lines = true, -- TODO: make it separatly for sections and groups
+		info_bar = true, -- consider ro remove or improve for beter functionality
 	},
 
 	-- Configuration for typography module
@@ -29,10 +32,8 @@ local defaults = {
 		comment_hl = false,
 
 		-- NOTE: required tree-sitter:
-		skip_meta_lines = true, -- TODO: make it separatly for sections and groups
 		group_frames = true, -- TODO: recreate icons, add frames for groups
 		icons = false, -- TODO: recreate icons, add frames for groups
-		info_bar = false, -- consider ro remove or improve for beter functionality
 	},
 }
 
@@ -65,6 +66,8 @@ local function post_validate()
 			repleace_dash = { M.configuration.core.repleace_dash, { "string", "boolean" }, false },
 			repleace_ellipsis = { M.configuration.core.repleace_ellipsis, { "string", "boolean" }, false },
 			auto_turn_page = { M.configuration.core.auto_turn_page, "boolean", false },
+			info_bar = { M.configuration.core.info_bar, "boolean", false },
+			skip_meta_lines = { M.configuration.core.skip_meta_lines, "boolean", false },
 		})
 	end
 
@@ -77,10 +80,8 @@ local function post_validate()
 			quote_hl = { M.configuration.typography.quote_hl, { "string", "boolean" }, false },
 			comment_hl = { M.configuration.typography.comment_hl, { "string", "boolean" }, false },
 
-			skip_meta_lines = { M.configuration.typography.skip_meta_lines, "boolean", false },
 			group_frames = { M.configuration.typography.group_frames, "boolean", true },
 			icons = { M.configuration.typography.icons, "boolean", false },
-			info_bar = { M.configuration.typography.info_bar, "boolean", false },
 		})
 	end
 end
