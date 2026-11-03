@@ -34,8 +34,7 @@ local defaults = {
 		comment_hl = false,
 
 		-- NOTE: required tree-sitter:
-		group_frames = true, -- TODO: recreate icons, add frames for groups
-		icons = false, -- TODO: recreate icons, add frames for groups
+		group_frames = true,
 	},
 }
 
@@ -83,7 +82,6 @@ local function post_validate()
 			comment_hl = { M.configuration.typography.comment_hl, { "string", "boolean" }, false },
 
 			group_frames = { M.configuration.typography.group_frames, "boolean", true },
-			icons = { M.configuration.typography.icons, "boolean", false },
 		})
 	end
 end
