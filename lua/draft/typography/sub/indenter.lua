@@ -12,6 +12,7 @@ local function is_not_paragraph()
 end
 
 ---@return boolean is_correct_node Is actual decorated line proper to indent
+---@diagnostic disable: undefined-field
 -- PERF: there is huge performance decline vs. is_not_paragraph() method
 local function is_correct_node()
 	local node = utils.get_node(selected_line.buf_id, selected_line.row_id)

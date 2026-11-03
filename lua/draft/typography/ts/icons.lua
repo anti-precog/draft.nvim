@@ -38,13 +38,13 @@ end
 ---Sprawdza, czy węzeł znajduje się wewnątrz grupy (szuka w górę drzewa)
 ---@param node TSNode|nil Węzeł Treesitter do sprawdzenia
 ---@return boolean is_in_group true if node is in group
+---@diagnostic disable: undefined-field
 local function is_in_group(node)
 	if not node then
 		return false
 	end
 
 	-- Przechodzimy w górę po rodzicach węzła
-	---@diagnostic disable: undefined-field
 	local current = node:parent()
 	while current do
 		-- Zamień "group" na dokładną nazwę typu węzła grupy z Twojego parsera Treesitter

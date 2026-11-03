@@ -52,7 +52,7 @@ local function is_footer()
 	return selected_line.text:match("^<")
 end
 
----@return userdata|nil TSNode node from one line below
+---@return TSNode|nil TSNode node from one line below
 local function get_node_below()
 	if selected_line.row_id == utils.get_last_row_id() then
 		return nil
@@ -60,7 +60,7 @@ local function get_node_below()
 	return utils.get_node(selected_line.buf_id, selected_line.row_id + 1)
 end
 
----@return userdata|nil TSNode node from one line above
+---@return TSNode|nil TSNode node from one line above
 local function get_node_above()
 	if selected_line.row_id == 0 then
 		return nil
@@ -68,8 +68,9 @@ local function get_node_above()
 	return utils.get_node(selected_line.buf_id, selected_line.row_id - 1)
 end
 
----@param node userdata|nil TSNode to check if in node group
+---@param node TSNode|nil TSNode to check if in node group
 ---@return boolean in_group
+---@diagnostic disable: undefined-field
 local function is_in_other_group(node)
 	if not node or node:type() == "footer" or node:type() == "header" then
 		return false

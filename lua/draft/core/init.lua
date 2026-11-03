@@ -1,4 +1,5 @@
-local core_config = require("draft.config").configuration.core
+local global = require("draft.config")
+local core_config = global.configuration.core
 
 local active_features = {}
 
@@ -68,7 +69,7 @@ function M.setup()
 				feature()
 			end
 
-			if core_config and core_config.skip_meta_lines then
+			if global.has_parser and core_config.skip_meta_lines then
 				local skipper = require("draft.core.ts.skipper")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,
@@ -79,7 +80,7 @@ function M.setup()
 				})
 			end
 
-			if core_config and core_config.info_bar then
+			if global.has_parser and core_config.info_bar then
 				local status = require("draft.core.ts.status")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,

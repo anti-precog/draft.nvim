@@ -20,10 +20,9 @@ local function gather_lines(buf_id, begin_row_id, end_row_id)
 	return vim.api.nvim_buf_get_lines(buf_id, begin_row_id, end_row_id + 1, false)
 end
 
----@param win_id integer Window handle
 ---@param row_id integer Number of line
 ---@return boolean is_cursor_on_line is cursor position is on the line
-local function is_cursor_on_line(win_id, row_id)
+local function is_cursor_on_line(row_id)
 	return utils.get_cursor_row_id() == row_id
 end
 
@@ -80,7 +79,7 @@ function M.setup()
 
 		-- INSERT mode: (vim)
 		on_line = function(_, win_id, buf_id, row_id)
-			if is_cursor_on_line(win_id, row_id) then
+			if is_cursor_on_line(row_id) then
 				local content = get_line_content(buf_id, row_id)
 				decorator.target(win_id, buf_id, row_id, content)
 				decorator.clear_decoration()
