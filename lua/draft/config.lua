@@ -26,13 +26,6 @@ local defaults = {
 		center_asterix = true,
 		center_header = false,
 
-		---@depracated Use treesitter_integration
-		dialogue_hl = false,
-		---@depracated Use treesitter_integration
-		quote_hl = false,
-		---@depracated Use treesitter_integration
-		comment_hl = false,
-
 		-- NOTE: required tree-sitter:
 		group_frames = true,
 	},
@@ -77,10 +70,6 @@ local function post_validate()
 			indent_size = { M.configuration.typography.indent_size, "number", false },
 			center_header = { M.configuration.typography.center_header, "boolean", false },
 			center_asterix = { M.configuration.typography.center_asterix, "boolean", false },
-			dialogue_hl = { M.configuration.typography.dialogue_hl, { "string", "boolean" }, false },
-			quote_hl = { M.configuration.typography.quote_hl, { "string", "boolean" }, false },
-			comment_hl = { M.configuration.typography.comment_hl, { "string", "boolean" }, false },
-
 			group_frames = { M.configuration.typography.group_frames, "boolean", true },
 		})
 	end
