@@ -37,13 +37,14 @@ end
 
 ---Sprawdza, czy węzeł znajduje się wewnątrz grupy (szuka w górę drzewa)
 ---@param node TSNode|nil Węzeł Treesitter do sprawdzenia
----@return boolean true, jeśli węzeł jest w grupie
+---@return boolean is_in_group true if node is in group
 local function is_in_group(node)
 	if not node then
 		return false
 	end
 
 	-- Przechodzimy w górę po rodzicach węzła
+	---@diagnostic disable: undefined-field
 	local current = node:parent()
 	while current do
 		-- Zamień "group" na dokładną nazwę typu węzła grupy z Twojego parsera Treesitter
@@ -56,47 +57,6 @@ local function is_in_group(node)
 	end
 
 	return false
-end
-
----@return boolean is_group Is actual decorated line group head
-local function is_group_head()
-	return selected_line.text:match("^[ ].*")
-end
-
----@return boolean is_group Is above decorated line group head
-local function is_group_head_above()
-	if selected_line.row_id == 0 then
-		return false
-	end
-	local row_above = selected_line.row_id - 1
-	local text = vim.api.nvim_buf_get_lines(0, row_above, row_above + 1, false)[1]
-
-	return text:match("^[ ].*")
-end
-
----@return boolean is_group Is above decorated line group head
-local function is_end_group_head_above()
-	if selected_line.row_id == 0 then
-		return false
-	end
-	local row_above = selected_line.row_id - 1
-	local text = vim.api.nvim_buf_get_lines(0, row_above, row_above + 1, false)[1]
-
-	return text:match("^%.$")
-end
-
----@return boolean is_end_group Is actual decorated line end group
-local function is_end_group()
-	--	return selected_line.text:match("^%.$")
-	if get_node(selected_line.row_id):type() == "stop" then
-		return true
-	end
-	return false
-end
-
----@return boolean is_summary
-local function is_summary()
-	return selected_line.text:match("^[@].*")
 end
 
 -- a submodule to highlight comments
@@ -112,13 +72,16 @@ function M.try_set_group_icon()
 	if not is_in_group(node) then
 		return true
 	end
+	if node == nil then
+		return true
+	end
 	if node:type() == "header" then
 		if selected_line.row_id == 0 then
 			draw_top_line()
 			return true
 		end
 		local node_above = utils.get_node(selected_line.buf_id, selected_line.row_id - 1)
-		if is_in_group(node_above) then
+		if node_above and is_in_group(node_above) then
 			if node_above:type() == "footer" then
 				draw_top_line()
 				return true

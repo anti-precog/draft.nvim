@@ -1,3 +1,5 @@
+---@alias TSNode userdata
+
 ---@class Config
 ---@field dash_symbol string
 ---@field core table|boolean
