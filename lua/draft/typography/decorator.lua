@@ -1,6 +1,7 @@
 ---@alias NextStep boolean Continue or break next step
 
 local global = require("draft.config")
+---@type TypographyConfig|boolean
 local typo_config = require("draft.config").configuration.typography
 local selected_line = require("draft.typography.line")
 

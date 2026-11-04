@@ -1,20 +1,22 @@
 local global = require("draft.config")
+---@type CoreConfig|boolean
 local core_config = global.configuration.core
 
 local active_features = {}
 
----@param feature fun() Add feature to activate
-local function set_activate(feature)
+---@param feature fun() feature to activate
+local function active(feature)
 	table.insert(active_features, feature)
 end
 
+--- neccesary vim setup to proper plugin operations
 local function vim_setup()
 	vim.opt_local.wrap = true
 	vim.opt_local.linebreak = true
 	vim.opt_local.breakindent = true
 end
 
----@return boolean config_status Check if auto_turn_page is active
+---@return boolean config_status status of auto_turn_page
 local function is_page_navigator()
 	return core_config.auto_turn_page
 end
@@ -36,28 +38,28 @@ local M = {}
 -- Init module
 ---@return CoreModule
 function M.setup()
-	set_activate(vim_setup)
+	active(vim_setup)
 
 	if core_config.repleace_dash then
-		set_activate(require("draft.core.auto_repleace").dash_keymap)
+		active(require("draft.core.auto_repleace").dash_keymap)
 	end
 	if core_config.repleace_ellipsis then
-		set_activate(require("draft.core.auto_repleace").ellipsis_keymap)
+		active(require("draft.core.auto_repleace").ellipsis_keymap)
 	end
 	if core_config.smart_quotes then
-		set_activate(require("draft.core.auto_repleace").quotes_keymap)
+		active(require("draft.core.auto_repleace").quotes_keymap)
 	end
 	if is_full_navigator() then
 		local nav = require("draft.core.navigator")
-		set_activate(nav.commands)
-		set_activate(nav.try_turn_page_wrap_lines_keymaps)
+		active(nav.commands)
+		active(nav.try_turn_page_wrap_lines_keymaps)
 	elseif is_wrap_navigator() then
 		local nav = require("draft.core.navigator")
-		set_activate(nav.wrap_lines_keymaps)
+		active(nav.wrap_lines_keymaps)
 	elseif is_page_navigator() then
 		local nav = require("draft.core.navigator")
-		set_activate(nav.commands)
-		set_activate(nav.try_turn_page_keymaps)
+		active(nav.commands)
+		active(nav.try_turn_page_keymaps)
 	end
 
 	local group = vim.api.nvim_create_augroup("draft-core", { clear = true })

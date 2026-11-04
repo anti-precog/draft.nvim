@@ -9,6 +9,7 @@ local defaults = {
 	dash_symbol = "em-dash", -- WARN: treesitter do not know about two versions
 
 	-- Configuration for core module
+	---@class CoreConfig
 	core = {
 		repleace_dash = "--",
 		repleace_ellipsis = "...",
@@ -21,6 +22,7 @@ local defaults = {
 	},
 
 	-- Configuration for typography module
+	---@class TypographyConfig
 	typography = {
 		indent_size = 4,
 		center_asterix = true,
@@ -50,7 +52,7 @@ local M = {}
 
 ---@type Config
 M.configuration = defaults
-M.has_parser = vim.treesitter.language.add("draft")
+M.has_parser = vim.treesitter.language.add("draft") and true or false
 
 local function post_validate()
 	if type(M.configuration.core) == "table" then

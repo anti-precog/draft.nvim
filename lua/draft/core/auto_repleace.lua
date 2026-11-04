@@ -1,5 +1,5 @@
----@type Config
 local config = require("draft.config").configuration
+---@type CoreConfig|boolean
 local core_config = config.core
 
 local QUOTE = {
