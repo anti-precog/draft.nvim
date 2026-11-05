@@ -81,9 +81,6 @@ Defualt options:
 
 ```lua
 {
-	-- select how to recognize dialogues as em-dash or en-dash
-	dash_symbol = "em-dash",
-
 	-- Configuration for core module
 	core = {
 		repleace_dash = "--",
@@ -100,7 +97,7 @@ Defualt options:
 	-- Configuration for typography module
 	typography = {
 		indent_size = 4,
-		center_header = false,
+		center_header = true,
 		center_asterix = true,
 
     	-- tree-sitter integration:

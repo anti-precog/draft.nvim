@@ -1,6 +1,20 @@
 ---@class Utils
 local M = {}
 
+---@param buf_id integer buffer handle
+---@param begin_row_id integer begin row
+---@param end_row_id integer end row
+function M.gather_lines(buf_id, begin_row_id, end_row_id)
+	return vim.api.nvim_buf_get_lines(buf_id, begin_row_id, end_row_id + 1, false)
+end
+
+---@param buf_id integer buffer handle
+---@param row_id integer source of line
+---@return string content outcome from the line
+function M.get_line_content(buf_id, row_id)
+	return M.gather_lines(buf_id, row_id, row_id + 1)[1]
+end
+
 -- Get treesitter node from vim row
 -- TODO: Consider repleacing buf_id to 0
 ---@return userdata|nil TSNode node from selected line

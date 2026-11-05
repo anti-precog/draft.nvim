@@ -12,7 +12,7 @@ function draft.setup(opts)
 	end
 	if setup.typography then
 		-- load typography module according to user configuration
-		require("draft.typography").setup()
+		require("draft.typography").init()
 	end
 end
 

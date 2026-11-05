@@ -1,27 +1,12 @@
-local global = require("draft.config")
----@type TypographyConfig|boolean
-local typo_config = global.setup.typography
-
 local utils = require("draft.utils")
-
----@param buf_id integer Buffer handle
----@param row_id integer Window row position
----@return string content Text from the line
-local get_line_content = function(buf_id, row_id)
-	return vim.api.nvim_buf_get_lines(buf_id, row_id, row_id + 1, false)[1]
-end
+local config = require("draft.config")
+---@type TypographyConfig|boolean
+local typo_config = config.setup.typography
 
 ---@type Decorator
 local decorator
 
----@param buf_id integer Buffer handle
----@param begin_row_id integer Begin row
----@param end_row_id integer End row
-local function gather_lines(buf_id, begin_row_id, end_row_id)
-	return vim.api.nvim_buf_get_lines(buf_id, begin_row_id, end_row_id + 1, false)
-end
-
----@param row_id integer Number of line
+---@param row_id integer number of line
 ---@return boolean is_cursor_on_line is cursor position is on the line
 local function is_cursor_on_line(row_id)
 	return utils.get_cursor_row_id() == row_id
@@ -34,13 +19,13 @@ local function visable_to_real_row_id(top_row_id, line_nr)
 	return top_row_id + line_nr - 1
 end
 
----@param buf_id integer Buffer handle
+---@param buf_id integer buffer handle
 local function setup_post_cr_decore_mapping(buf_id)
 	vim.keymap.set({ "i", "s" }, "<CR>", function()
 		local win_id = vim.api.nvim_get_current_win()
 		local cursor_row_id = utils.get_cursor_row_id()
 		if cursor_row_id >= 0 then
-			local content = get_line_content(buf_id, cursor_row_id)
+			local content = utils.get_line_content(buf_id, cursor_row_id)
 
 			decorator.target(win_id, buf_id, cursor_row_id, content)
 			decorator.post_run()
@@ -54,10 +39,10 @@ end
 local M = {}
 
 -- Init module
-function M.setup()
+function M.init()
 	decorator = require("draft.typography.decorator").init()
 
-	vim.api.nvim_set_decoration_provider(global.namespace, {
+	vim.api.nvim_set_decoration_provider(config.namespace, {
 
 		-- NOMRAL & VISUAL modes: (vim)
 		on_win = function(_, win_id, buf_id, top_row_id, bottom_row_id)
@@ -68,7 +53,7 @@ function M.setup()
 			end
 
 			decorator.clear_decoration_for_range(buf_id, top_row_id, bottom_row_id)
-			local visable_lines = gather_lines(buf_id, top_row_id, bottom_row_id)
+			local visable_lines = utils.gather_lines(buf_id, top_row_id, bottom_row_id)
 
 			for line_nr, content in ipairs(visable_lines) do
 				local row_id = visable_to_real_row_id(top_row_id, line_nr)
@@ -81,7 +66,7 @@ function M.setup()
 		-- INSERT mode: (vim)
 		on_line = function(_, win_id, buf_id, row_id)
 			if is_cursor_on_line(row_id) then
-				local content = get_line_content(buf_id, row_id)
+				local content = utils.get_line_content(buf_id, row_id)
 				decorator.target(win_id, buf_id, row_id, content)
 				decorator.clear_decoration()
 				decorator.run()
@@ -89,7 +74,7 @@ function M.setup()
 		end,
 	})
 
-	if global.has_parser then
+	if config.has_parser then
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = "draft",
 			callback = function(args)

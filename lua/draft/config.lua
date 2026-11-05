@@ -25,7 +25,7 @@ local defaults = {
 	typography = {
 		indent_size = 4,
 		center_asterix = true,
-		center_header = false,
+		center_header = true,
 
 		-- NOTE: required tree-sitter:
 		group_frames = true,

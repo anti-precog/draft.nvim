@@ -13,8 +13,7 @@ _G.find_group_header = function()
 	while node do
 		if node:type() == "group" then
 			local start_row = node:range()
-
-			local line = vim.api.nvim_buf_get_lines(buf_id, start_row, start_row + 1, false)[1]
+			local line = utils.get_line_content(buf_id, start_row)
 
 			return " " .. (line or "") .. " "
 		end

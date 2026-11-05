@@ -1,17 +1,18 @@
 -- Info about current decorated line
 ---@class LineInfo
 local line = {
-	---@type integer? Window id
+	---@type integer? window id
 	win_id = nil,
-	---@type integer? Buffer id
+	---@type integer? buffer id
 	buf_id = nil,
-	---@type integer? Row id
+	---@type integer? row id
 	row_id = nil,
-	---@type string? Value of line
+	---@type string? value of line
 	text = nil,
 }
 
----@param namespace integer Clear the line from namespace -> potencial decorations
+--- Clear the line from namespace -> potencial decorations
+---@param namespace integer
 function line:clear(namespace)
 	vim.api.nvim_buf_clear_namespace(self.buf_id, namespace, self.row_id, self.row_id + 1)
 end

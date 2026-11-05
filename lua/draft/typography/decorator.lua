@@ -29,17 +29,17 @@ function M.clear_decoration()
 	selected_line:clear(global.namespace)
 end
 
----@param buf_id integer Buffer handle
----@param begin_row_id integer Begin row to start clearing
----@param end_row_id integer End row to stop clearing
+---@param buf_id integer buffer handle
+---@param begin_row_id integer begin row to start clearing
+---@param end_row_id integer end row to stop clearing
 function M.clear_decoration_for_range(buf_id, begin_row_id, end_row_id)
 	vim.api.nvim_buf_clear_namespace(buf_id, global.namespace, begin_row_id, end_row_id + 1)
 end
 
 -- Set current line to decorate
----@param win_id integer Current decorated window id
----@param buf_id integer Current decorated buffer id
----@param row_id integer Current decorated row id
+---@param win_id integer current decorated window id
+---@param buf_id integer current decorated buffer id
+---@param row_id integer current decorated row id
 ---@param text string Current decorated text
 function M.target(win_id, buf_id, row_id, text)
 	selected_line.win_id = win_id
