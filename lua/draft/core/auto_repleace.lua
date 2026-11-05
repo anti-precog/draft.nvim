@@ -1,4 +1,4 @@
-local config = require("draft.config").configuration
+local config = require("draft.config").setup
 ---@type CoreConfig|boolean
 local core_config = config.core
 
@@ -8,8 +8,10 @@ local QUOTE = {
 	close = "”",
 }
 
----@param text string Text line with probable qution marks
----@return boolean quote_status Check if in the line quote is already open
+local EM_DASH = "—"
+
+---@param text string text line with probable quote marks
+---@return boolean quote_status is already closed
 local function is_quote_closed_in(text)
 	local open_count = select(2, text:gsub(QUOTE.open, ""))
 	local close_count = select(2, text:gsub(QUOTE.close, ""))
@@ -23,7 +25,7 @@ local M = {}
 
 -- Map key for repleacement of dash symbol
 function M.dash_keymap()
-	vim.keymap.set("i", core_config.repleace_dash, config.dash_symbol, { buffer = true })
+	vim.keymap.set("i", core_config.repleace_dash, EM_DASH, { buffer = true })
 end
 
 -- Map key for repleacement of ellipsis symbol

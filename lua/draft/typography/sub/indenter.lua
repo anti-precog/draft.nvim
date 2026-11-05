@@ -1,6 +1,6 @@
 local global = require("draft.config")
 local utils = require("draft.utils")
-local typo_config = global.configuration.typography
+local typo_config = global.setup.typography
 local selected_line = require("draft.typography.line")
 
 ---@type string Represents indent

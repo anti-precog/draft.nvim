@@ -2,7 +2,7 @@
 
 local global = require("draft.config")
 ---@type TypographyConfig|boolean
-local typo_config = require("draft.config").configuration.typography
+local typo_config = require("draft.config").setup.typography
 local selected_line = require("draft.typography.line")
 
 ---@type table<number, fun()> All implemented decoration steps

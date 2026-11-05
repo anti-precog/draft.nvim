@@ -1,16 +1,16 @@
 local utils = require("draft.utils")
 
----@return boolean cursor_status Check if cursor in first row
+---@return boolean cursor_status is on first row
 local function is_on_first_line()
 	return utils.get_cursor_line_nr() == 1
 end
 
----@return boolean cursor_status Check if cursor in last row
+---@return boolean cursor_status is on last row
 local function is_on_last_line()
 	return utils.get_cursor_line_nr() == utils.get_last_line_nr()
 end
 
----@return boolean cursor_status Check if cursor in last row
+---@return boolean cursor_status is on first row of wraped line
 local function is_on_first_wrap_line()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	if cursor_pos[1] ~= 1 then
@@ -22,7 +22,7 @@ local function is_on_first_wrap_line()
 	return cursor_screen_pos.row == first_symbol_pos.row
 end
 
----@return boolean cursor_status Check if cursor in last row
+---@return boolean cursor_status is on last row of wraped line
 local function is_on_last_wrap_line()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local last_line_nr = vim.api.nvim_buf_line_count(0)
@@ -35,30 +35,32 @@ local function is_on_last_wrap_line()
 	return cursor_screen_pos.row == last_symbol_pos.row
 end
 
----@return string path_part Name of actual file directory
+---@return string path_part name of actual file directory
 local function get_dir()
 	return vim.fn.expand("%:p:h")
 end
 
----@return string path_part Name of actual file
+---@return string path_part name of actual file
 local function get_filename()
 	return vim.fn.expand("%:t")
 end
 
----@param filename string Name of file
----@return number? filename_number Number from filename
+---@param filename string name of file
+---@return number? filename_number number from filename
 local function get_page(filename)
 	return tonumber(filename:match("(%d+)"))
 end
 
----@param filename string Name of file
----@param number number Number for filename
+-- Open new file by name and number
+---@param filename string name of file
+---@param number number number for opening file
 local function load_page(filename, number)
 	local full_path = get_dir() .. "/" .. filename:gsub("(%d+)", tostring(number), 1)
 	vim.cmd("argadd " .. full_path)
 	vim.cmd("edit " .. full_path)
 end
 
+-- Wait for user input - Ask for the number of page
 local function select_page()
 	local num = tonumber(vim.fn.input("number: "))
 	vim.cmd("redraw!")
@@ -70,6 +72,7 @@ local function select_page()
 	load_page(filename, num)
 end
 
+-- Wait for user input - inform about lack of the page
 local function turn_page()
 	local filename = get_filename()
 	local page_num = get_page(filename)
@@ -80,6 +83,7 @@ local function turn_page()
 	load_page(filename, page_num + 1)
 end
 
+-- Wait for user input - inform about lack of the page or page zero
 local function return_page()
 	local filename = get_filename()
 	local page_num = get_page(filename)

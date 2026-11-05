@@ -1,6 +1,8 @@
 ---@class Utils
 local M = {}
 
+-- Get treesitter node from vim row
+-- TODO: Consider repleacing buf_id to 0
 ---@return userdata|nil TSNode node from selected line
 ---@param buf_id number
 ---@param row_id number
@@ -11,35 +13,37 @@ function M.get_node(buf_id, row_id)
 	})
 end
 
----@param buf_id integer Buffer handle
----@return boolean status Is buffer filetype draft
+-- TODO: Consider repleacing buf_id to 0
+---@param buf_id integer buffer handle
+---@return boolean status is buffer filetype draft
 function M.is_draft_type(buf_id)
 	return "draft" == vim.bo[buf_id].filetype
 end
 
 -- Check nvim INSERT mode status
----@return boolean is_insert_mode Status of current vim INSERT mode
+---@return boolean is_insert_mode status of current vim INSERT mode
 function M.is_insert_mode()
 	return vim.api.nvim_get_mode().mode == "i"
 end
 
----@return integer line_nr Current postion of cursor
+-- TODO: Consider if static buf_id as 0 is save in all scenarios
+---@return integer line_nr current postion of cursor in vim
 function M.get_cursor_line_nr()
 	return vim.api.nvim_win_get_cursor(0)[1]
 end
 
----@return integer row_id Current postion of cursor
--- HACK: duplicated in typography/init
+---@return integer row_id current postion of cursor in vim
 function M.get_cursor_row_id()
 	return M.get_cursor_line_nr() - 1
 end
 
----@return integer line_nr Last current buffer line number
+-- TODO: Consider if static buf_id as 0 is save in all scenarios
+---@return integer line_nr last current buffer line number in vim
 function M.get_last_line_nr()
 	return vim.api.nvim_buf_line_count(0)
 end
 
----@return integer row_id Last current buffer row_id
+---@return integer row_id last current buffer row_id in vim
 function M.get_last_row_id()
 	return M.get_last_line_nr() - 1
 end

@@ -1,7 +1,8 @@
-local global = require("draft.config")
+local config = require("draft.config")
 ---@type CoreConfig|boolean
-local core_config = global.configuration.core
+local core_config = config.setup.core
 
+-- Table of active core features
 local active_features = {}
 
 ---@param feature fun() feature to activate
@@ -9,24 +10,24 @@ local function active(feature)
 	table.insert(active_features, feature)
 end
 
---- neccesary vim setup to proper plugin operations
+-- Neccesary vim setup to proper plugin operations
 local function vim_setup()
 	vim.opt_local.wrap = true
 	vim.opt_local.linebreak = true
 	vim.opt_local.breakindent = true
 end
 
----@return boolean config_status status of auto_turn_page
+---@return boolean config_status status of core.auto_turn_page
 local function is_page_navigator()
 	return core_config.auto_turn_page
 end
 
----@return boolean config_status Check if move_by_visual_lines is active
+---@return boolean config_status status of core.move_by_visual_lines
 local function is_wrap_navigator()
 	return core_config.move_by_visual_lines
 end
 
----@return boolean config_status Check if all navigator features are active
+---@return boolean config_status check if all navigator features are active
 local function is_full_navigator()
 	return is_page_navigator() and is_wrap_navigator()
 end
@@ -37,9 +38,7 @@ local M = {}
 
 -- Init module
 ---@return CoreModule
-function M.setup()
-	active(vim_setup)
-
+function M.init()
 	if core_config.repleace_dash then
 		active(require("draft.core.auto_repleace").dash_keymap)
 	end
@@ -53,14 +52,15 @@ function M.setup()
 		local nav = require("draft.core.navigator")
 		active(nav.commands)
 		active(nav.try_turn_page_wrap_lines_keymaps)
-	elseif is_wrap_navigator() then
-		local nav = require("draft.core.navigator")
-		active(nav.wrap_lines_keymaps)
 	elseif is_page_navigator() then
 		local nav = require("draft.core.navigator")
 		active(nav.commands)
 		active(nav.try_turn_page_keymaps)
+	elseif is_wrap_navigator() then
+		active(require("draft.core.navigator").wrap_lines_keymaps)
 	end
+
+	active(vim_setup)
 
 	local group = vim.api.nvim_create_augroup("draft-core", { clear = true })
 	vim.api.nvim_create_autocmd({ "FileType" }, {
@@ -71,8 +71,8 @@ function M.setup()
 				feature()
 			end
 
-			if global.has_parser and core_config.skip_meta_lines then
-				local skipper = require("draft.core.ts.skipper")
+			if config.has_parser and core_config.skip_meta_lines then
+				local skipper = require("draft.core.skipper")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,
 					callback = function()
@@ -82,8 +82,8 @@ function M.setup()
 				})
 			end
 
-			if global.has_parser and core_config.info_bar then
-				local status = require("draft.core.ts.status")
+			if config.has_parser and core_config.info_bar then
+				local status = require("draft.core.status")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,
 					callback = function()

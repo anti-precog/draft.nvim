@@ -2,15 +2,15 @@
 ---@class Draft
 local draft = {}
 
----@param opts table Options configured by user
+---@param opts table the plugin options, configured by user
 function draft.setup(opts)
-	local config = require("draft.config").setup(opts).configuration
+	local setup = require("draft.config").init(opts).setup
 
-	if config.core then
+	if setup.core then
 		-- load core module according to user configuration
-		require("draft.core").setup()
+		require("draft.core").init()
 	end
-	if config.typography then
+	if setup.typography then
 		-- load typography module according to user configuration
 		require("draft.typography").setup()
 	end
