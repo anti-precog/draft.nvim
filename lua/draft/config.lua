@@ -36,7 +36,7 @@ local defaults = {
 ---@param opts table the plugin options, configured by user
 local function pre_validate(opts)
 	vim.validate({
-		core = { opts.core, { "table, boolean" }, true },
+		core = { opts.core, { "table", "boolean" }, true },
 		typography = { opts.typography, { "table", "boolean" }, true },
 	})
 end
