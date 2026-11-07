@@ -14,12 +14,22 @@ local function is_section()
 end
 
 local function make_center()
-	local win_half = vim.api.nvim_win_get_width(selected_line.win_id) / 2
-	local line_half = #selected_line.text / 2
-	local length = win_half - line_half - 3
+	local win_id = selected_line.win_id
+	local win_width = vim.api.nvim_win_get_width(win_id)
+
+	local wo = vim.wo[win_id]
+	if wo.number or wo.relativenumber then
+		local num_width = math.max(wo.numberwidth, #tostring(vim.fn.line("$", win_id))) + 1
+		win_width = win_width - num_width
+	end
+
+	local line_width = vim.api.nvim_strwidth(selected_line.text)
+	local length = math.floor((win_width - line_width) / 2)
+
 	if length <= 0 then
 		return
 	end
+
 	local space = string.rep(" ", length)
 	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
 		virt_text = { { space, "NonText" } },
