@@ -52,20 +52,9 @@ local function is_footer()
 	return selected_line.text:match("^<")
 end
 
-local function is_line_blank(buf_id, row_id)
-	local content = utils.get_line_content(buf_id, row_id)
-	if content == "" then
-		return true
-	end
-	return false
-end
-
 ---@return TSNode|nil TSNode node from one line below
 local function get_node_below()
 	if selected_line.row_id == utils.get_last_row_id() then
-		return nil
-	end
-	if is_line_blank(selected_line.buf_id, selected_line.row_id + 1) then
 		return nil
 	end
 
@@ -75,9 +64,6 @@ end
 ---@return TSNode|nil TSNode node from one line above
 local function get_node_above()
 	if selected_line.row_id == 0 then
-		return nil
-	end
-	if is_line_blank(selected_line.buf_id, selected_line.row_id - 1) then
 		return nil
 	end
 	return utils.get_node(selected_line.buf_id, selected_line.row_id - 1)
