@@ -1,3 +1,7 @@
+; other
+(ERROR) @error
+(MISSING) @missing
+
 ; basic
 (text) @none
 (speech) @string
@@ -18,15 +22,15 @@
 (comment) @comment
 (comment) @nospell
 
+; alternatives
+(alter) @markup.strikethrough 
+(alter) @nospell
+
 ; section
-(title) @label
-(title) @nospell
+(name) @label
+(name) @nospell
 
 ((tag) @operator
  (#set! conceal ""))
 
-
-; other
-(ERROR) @error
-(MISSING) @missing
 
