@@ -4,23 +4,15 @@
 (quote) @string
 (asterix) @label
 
-(narration) @spell
-(dialog) @spell
-(quotation) @spell
-
-; groups
-((header) @comment
- (#set! conceal ""))
-((footer) @comment
- (#set! conceal ""))
+(paragraph) @spell
 
 ; comments
 (comment) @comment
 (comment) @nospell
 
-; section
-(title name: (name) @label)
-(title name: (name) @nospell)
+; header
+(name) @label
+(name) @nospell
 
 ((tag) @number
  (#set! conceal ""))

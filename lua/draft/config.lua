@@ -16,7 +16,9 @@ local defaults = {
 		auto_turn_page = true,
 
 		-- NOTE: required tree-sitter:
-		skip_meta_lines = true, -- TODO: make it separatly for sections and groups
+		-- FIX: broken feature:
+		skip_meta_lines = false, -- TODO: make it separatly for sections and groups
+		-- FIX: broken feature:
 		info_bar = false, -- NOTE: Experimental feature
 	},
 
@@ -28,7 +30,8 @@ local defaults = {
 		center_header = true,
 
 		-- NOTE: required tree-sitter:
-		group_frames = true,
+		-- FIX: broken feature:
+		group_frames = false,
 	},
 }
 
