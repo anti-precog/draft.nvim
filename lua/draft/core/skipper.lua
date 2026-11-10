@@ -4,7 +4,7 @@ local utils = require("draft.utils")
 ---@param text string content of line to check
 ---@return boolean is_meta is line start with # or > or <
 local function is_meta(text)
-	return text:match("^[#><].*")
+	return text:match("^[><].*")
 end
 
 -- A submodule for skip lines
@@ -13,7 +13,6 @@ local M = {}
 
 local prev_cursor_line_nr = -1
 
--- WARN: It require treesitter parser
 -- Prevent a cursor to land on meta line if user move down
 function M.try_skip()
 	local cursor_line_nr = utils.get_cursor_line_nr()

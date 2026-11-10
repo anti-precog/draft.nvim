@@ -11,13 +11,13 @@
 (comment) @nospell
 
 ; context
-(main_context) @comment.error
-(head_context) @comment.note
-(foot_context) @comment.todo
+(main_context) @comment.todo
+(head_context) @comment.error
+(foot_context) @comment.warning
 
+(main_context) @nospell
 (head_context) @nospell
 (foot_context) @nospell
-(main_context) @nospell
 
 ; header
 (name) @label

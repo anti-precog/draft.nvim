@@ -1,23 +1,20 @@
 local utils = require("draft.utils")
 
 -- TODO: Consider if buf_id could be zero
--- If line is in treesitter group, then return text from group header (started with '>')
----@return string content from group header
----@diagnostic disable: undefined-field
-_G.find_group_header = function()
+---@return string content from head_context (line started by '>')
+_G.find_head_context = function()
 	local buf_id = vim.api.nvim_get_current_buf()
 	local row_id = utils.get_cursor_row_id()
 
-	local node = utils.get_node(buf_id, row_id)
-
-	while node do
-		if node:type() == "group" then
-			local start_row = node:range()
-			local line = utils.get_line_content(buf_id, start_row)
-
-			return " " .. (line or "") .. " "
+	for r = row_id, 0, -1 do
+		local line = utils.get_line_content(buf_id, r)
+		if line then
+			if line:match("^>>") or line:match("^<") then
+				return ""
+			elseif line:match("^>") then
+				return " " .. line .. " "
+			end
 		end
-		node = node:parent()
 	end
 
 	return ""
@@ -28,10 +25,9 @@ end
 local M = {}
 
 -- WARN: Experimental feature
--- WARN: It require treesitter parser
 -- Re/Draw status bar
 function M.redraw()
-	vim.opt_local.winbar = "%#StatusLine#%{v:lua.find_group_header()}%="
+	vim.opt_local.winbar = "%#StatusLine#%{v:lua.find_head_context()}%="
 end
 
 return M

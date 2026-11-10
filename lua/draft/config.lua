@@ -14,12 +14,8 @@ local defaults = {
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
-
-		-- NOTE: required tree-sitter:
-		-- FIX: broken feature:
-		skip_meta_lines = false, -- TODO: make it separatly for sections and groups
-		-- FIX: broken feature:
-		info_bar = false, -- NOTE: Experimental feature
+		skip_meta_lines = true,
+		info_bar = true, -- WARN: Experimental feature
 	},
 
 	-- Configuration for typography module
