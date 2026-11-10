@@ -10,7 +10,7 @@ end
 
 ---@return boolean is_section check if current line represent section
 local function is_section()
-	return selected_line.text:match("^#")
+	return selected_line.text:match("^_")
 end
 
 local function make_center()

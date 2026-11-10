@@ -4,86 +4,78 @@ local selected_line = require("draft.typography.line")
 
 local TOP_L = "┌─ "
 local TOP_R = "─┐"
-local MID_L = "├─ "
-local MID_R = "─┤"
+local MID = "─"
+local MID_L = "├─"
 local BOT_L = "└─ "
 local BOT_R = "─┘"
 
-local function draw_top_line()
-	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { TOP_L, "NonText" } },
+local function draw_full_line()
+	local win_id = selected_line.win_id
+
+	-- Pobieramy szczegółowe informacje o oknie (zawiera m.in. textoff - szerokość kolumn bocznych)
+	local win_info = vim.fn.getwininfo(win_id)[1]
+	if not win_info then
+		return
+	end
+
+	-- Całkowita szerokość minus kolumny boczne (numery, signcolumn, foldcolumn)
+	local win_width = win_info.width - win_info.textoff
+
+	local line_width = vim.api.nvim_strwidth(selected_line.text)
+	local length = win_width - line_width - 2
+
+	if length <= 0 then
+		return
+	end
+
+	local fill = string.rep(MID, length)
+	local col = #selected_line.text
+
+	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, col, {
+		virt_text = {
+			{ " ", "NonText" },
+			{ fill, "@comment" },
+		},
 		virt_text_pos = "inline",
-	})
-	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { TOP_R, "NonText" } },
-		virt_text_pos = "right_align",
+		hl_mode = "combine",
 	})
 end
 
-local function draw_middle_line()
+local function draw_top_line()
 	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { MID_L, "NonText" } },
+		virt_text = { { TOP_L, "@comment" } },
 		virt_text_pos = "inline",
 	})
-	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { MID_R, "NonText" } },
-		virt_text_pos = "right_align",
-	})
+	--vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
+	--	virt_text = { { TOP_R, "@comment" } },
+	--	virt_text_pos = "right_align",
+	--})
 end
 
 local function draw_bottom_line()
+	--vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
+	--	virt_text = { { BOT_L, "@comment" } },
+	--	virt_text_pos = "inline",
+	--})
 	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { BOT_L, "NonText" } },
-		virt_text_pos = "inline",
-	})
-	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { BOT_R, "NonText" } },
+		virt_text = { { BOT_R, "@comment" } },
 		virt_text_pos = "right_align",
 	})
 end
 
----@return boolean is_header check if current line represent group header
-local function is_header()
+---@return boolean is_main_context check if current line represent main_context
+local function is_main_context()
+	return selected_line.text:match("^#")
+end
+
+---@return boolean is_head_context check if current line represent head_context
+local function is_probably_head_context()
 	return selected_line.text:match("^>")
 end
 
----@return boolean is_footer check if current line represent group footer
-local function is_footer()
+---@return boolean is_foot_context check if current line represent foot_context
+local function is_foot_context()
 	return selected_line.text:match("^<")
-end
-
----@return TSNode|nil TSNode node from one line below
-local function get_node_below()
-	if selected_line.row_id == utils.get_last_row_id() then
-		return nil
-	end
-
-	return utils.get_node(selected_line.buf_id, selected_line.row_id + 1)
-end
-
----@return TSNode|nil TSNode node from one line above
-local function get_node_above()
-	if selected_line.row_id == 0 then
-		return nil
-	end
-	return utils.get_node(selected_line.buf_id, selected_line.row_id - 1)
-end
-
----@param node TSNode|nil TSNode to check if in node group
----@return boolean in_group
----@diagnostic disable: undefined-field
-local function is_in_other_group(node)
-	if not node or node:type() == "footer" or node:type() == "header" then
-		return false
-	end
-	local parent = node:parent()
-	while parent do
-		if parent:type() == "group" then
-			return true
-		end
-		parent = parent:parent()
-	end
-	return false
 end
 
 -- a submodule to decorate groups by frames
@@ -94,18 +86,14 @@ local M = {}
 ---@return NextStep next_step Return true if is NOT a comment
 -- PERF: This is slower function than regex so use it as one of the last step in decorator to avoid uncecceary slower tree-sitter comunication
 function M.try_set_frame_line()
-	if is_footer() then
-		if is_in_other_group(get_node_below()) then
-			draw_middle_line()
-		else
-			draw_bottom_line()
-		end
-	elseif is_header() then
-		if is_in_other_group(get_node_above()) then
-			draw_middle_line()
-		else
-			draw_top_line()
-		end
+	if is_foot_context() then
+		draw_bottom_line()
+		return false
+	elseif is_main_context() then
+		draw_full_line()
+		return false
+	elseif is_probably_head_context() then
+		draw_top_line()
 		return false
 	end
 	return true

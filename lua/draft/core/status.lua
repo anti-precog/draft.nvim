@@ -9,9 +9,7 @@ _G.find_head_context = function()
 	for r = row_id, 0, -1 do
 		local line = utils.get_line_content(buf_id, r)
 		if line then
-			if line:match("^>>") or line:match("^<") then
-				return ""
-			elseif line:match("^>") then
+			if line:match("^>") then
 				return " " .. line .. " "
 			end
 		end

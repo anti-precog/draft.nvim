@@ -11,9 +11,11 @@
 (comment) @nospell
 
 ; context
-(main_context) @comment.todo
-(head_context) @comment.error
-(foot_context) @comment.warning
+(main_context) @comment
+((head_context) @comment
+ (#set! conceal ""))
+((foot_context) @comment
+ (#set! conceal ""))
 
 (main_context) @nospell
 (head_context) @nospell

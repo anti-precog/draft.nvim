@@ -24,10 +24,7 @@ local defaults = {
 		indent_size = 4,
 		center_asterix = true,
 		center_header = true,
-
-		-- NOTE: required tree-sitter:
-		-- FIX: broken feature:
-		group_frames = false,
+		group_frames = true,
 	},
 }
 
