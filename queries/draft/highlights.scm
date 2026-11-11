@@ -11,21 +11,18 @@
 (comment) @nospell
 
 ; context
-(main_context) @comment
-((head_context) @comment
- (#set! conceal ""))
-((foot_context) @comment
- (#set! conceal ""))
+(context) @comment
+((sub_context) @comment
+ (#set! conceal ">"))
 
-(main_context) @nospell
-(head_context) @nospell
-(foot_context) @nospell
+(context) @nospell
+(sub_context) @nospell
 
 ; header
 (name) @label
 (name) @nospell
 
-((tag) @number
+((prefix) @number
  (#set! conceal ""))
 
 ; other
