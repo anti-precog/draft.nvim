@@ -11,11 +11,17 @@
 (comment) @nospell
 
 ; context
-(context) @comment
-((sub_context) @comment
- (#set! conceal ">"))
+(context) @operator
+(context
+ (info) @label)
 
 (context) @nospell
+
+(sub_context) @operator
+(sub_context
+ (info) @label
+ (#set! conceal ""))
+
 (sub_context) @nospell
 
 ; header
