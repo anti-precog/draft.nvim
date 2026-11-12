@@ -4,7 +4,7 @@ local utils = require("draft.utils")
 ---@param text string content of line to check
 ---@return boolean is_meta is line start with # or > or <
 local function is_meta(text)
-	return text:match("^[+#%-].*")
+	return text:match("^[<>].*")
 end
 
 -- A submodule for skip lines

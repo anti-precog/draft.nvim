@@ -32,6 +32,7 @@ local function draw_line()
 	local fill = string.rep(MID, length)
 	local col = #selected_line.text
 
+	--vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, col, {
 	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, col, {
 		virt_text = {
 			{ " ", "NonText" },
@@ -66,7 +67,7 @@ end
 
 ---@return boolean is_context check if current line represent main_context
 local function is_context()
-	return selected_line.text:match("^+")
+	return selected_line.text:match("^>")
 end
 
 ---@return boolean is_head_context check if current line represent head_context

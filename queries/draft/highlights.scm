@@ -25,7 +25,6 @@
 (sub_context) @nospell
 
 ; header
-(name) @label
 (name) @nospell
 
 ((prefix) @number
