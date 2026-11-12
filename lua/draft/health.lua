@@ -1,5 +1,4 @@
 local function check_nvim_version()
-	vim.health.start("draft requirements")
 	local v = vim.version()
 	if v.major == 0 and v.minor >= 10 and v.patch >= 0 then
 		vim.health.ok("neovim version >= 0.10.0")
@@ -8,34 +7,37 @@ local function check_nvim_version()
 	end
 end
 
+local function check_draft_filetype()
+	local ft_patterns = vim.filetype.match({ filename = "test.draft" })
+
+	if ft_patterns == "draft" or vim.tbl_contains(vim.fn.getcompletion("draft", "filetype"), "draft") then
+		vim.health.ok("draft filetype is registered")
+	else
+		vim.health.warn(
+			"draft filetype not found",
+			"Make sure you have set up a filetype detector for '*.draft' files."
+		)
+	end
+end
+
+local config = require("draft.config")
+
 ---@type Config
-local config = require("draft.config").configuration
+local setup = config.setup
 
-local function check_hl_groups_config()
-	vim.health.start("associated highlight groups")
-	local typo_config = config.typography
-	local hl_groups = {
-		quotes = typo_config.quote_hl,
-		comments = typo_config.comment_hl,
-		headers = typo_config.header_hl,
-		dialogues = typo_config.dialogue_hl,
-	}
-
-	for section, gr_name in pairs(hl_groups) do -- why not working?
-		if vim.fn.hlexists(gr_name) then
-			vim.health.ok(gr_name .. " for " .. section)
-		else
-			vim.health.warn(
-				gr_name .. " for " .. section,
-				"Define this group in your nvim config or remove from plugin configurtion."
-			)
-		end
+local function check_draft_parser()
+	if config.has_parser then
+		vim.health.ok("draft paser found")
+	else
+		vim.health.warn("draft parser not found")
 	end
 end
 
 local M = {}
 M.check = function()
+	vim.health.start("draft requirements")
 	check_nvim_version()
-	check_hl_groups_config()
+	check_draft_filetype()
+	check_draft_parser()
 end
 return M
