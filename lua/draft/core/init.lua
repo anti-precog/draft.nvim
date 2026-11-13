@@ -72,10 +72,15 @@ function M.init()
 				feature()
 			end
 
-			if config.has_parser and core_config.skip_meta_lines then
+			if not config.has_parser then
+				return
+			end
+
+			if core_config.skip_meta_lines then
 				local skipper = require("draft.core.skipper")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,
+					pattern = "draft",
 					callback = function()
 						skipper.try_skip()
 					end,
@@ -83,10 +88,11 @@ function M.init()
 				})
 			end
 
-			if config.has_parser and core_config.info_bar then
+			if core_config.info_bar then
 				local status = require("draft.core.status")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
 					group = group,
+					pattern = "draft",
 					callback = function()
 						status.redraw()
 					end,
