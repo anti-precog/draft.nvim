@@ -71,33 +71,33 @@ function M.init()
 			for _, feature in ipairs(active_features) do
 				feature()
 			end
-
-			if core_config.skip_meta_lines then
-				local skipper = require("draft.core.skipper")
-				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-					group = group,
-					pattern = "draft",
-					callback = function()
-						skipper.try_skip()
-					end,
-					desc = "load draft.core skipper",
-				})
-			end
-
-			if core_config.info_bar then
-				local status = require("draft.core.status")
-				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-					group = group,
-					pattern = "draft",
-					callback = function()
-						status.redraw()
-					end,
-					desc = "load draft.core status",
-				})
-			end
 		end,
 		desc = "load draft.core improvements",
 	})
+	if core_config.skip_meta_lines then
+		local skipper = require("draft.core.skipper")
+		vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+			group = group,
+			pattern = "*.draft",
+			callback = function()
+				skipper.try_skip()
+			end,
+			desc = "load draft.core skipper",
+		})
+	end
+
+	if core_config.info_bar then
+		local status = require("draft.core.status")
+		vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+			group = group,
+			pattern = "*.draft",
+			callback = function()
+				status.redraw()
+			end,
+			desc = "load draft.core status",
+		})
+	end
+
 	return M
 end
 return M
