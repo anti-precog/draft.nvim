@@ -91,7 +91,7 @@ Defualt options:
 
     	-- tree-sitter integration:
 		skip_meta_lines = true,
-		info_bar = false,
+		info_bar = true,
 	},
 
 	-- Configuration for typography module

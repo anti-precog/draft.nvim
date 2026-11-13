@@ -72,10 +72,6 @@ function M.init()
 				feature()
 			end
 
-			if not config.has_parser then
-				return
-			end
-
 			if core_config.skip_meta_lines then
 				local skipper = require("draft.core.skipper")
 				vim.api.nvim_create_autocmd({ "CursorMoved" }, {
