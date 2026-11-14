@@ -5,6 +5,7 @@ local selected_line = require("draft.typography.line")
 local TOP_L = "┌─ "
 local TOP_R = "─┐"
 local MID = "─"
+local SUB = "*"
 local MID_L = "├─"
 local BOT_L = "└─ "
 local BOT_R = "─┘"
@@ -43,41 +44,25 @@ local function draw_line()
 	})
 end
 
-local function draw_top_line()
+local function draw_mark()
 	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { TOP_L, "@comment" } },
+		virt_text = { { SUB, "@comment" } },
 		virt_text_pos = "inline",
 	})
 	--vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-	--	virt_text = { { TOP_R, "@comment" } },
+	--	virt_text = { { SUB, "@comment" } },
 	--	virt_text_pos = "right_align",
 	--})
 end
 
-local function draw_bottom_line()
-	vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-		virt_text = { { CONTEXT_L, "@comment" } },
-		virt_text_pos = "inline",
-	})
-	--vim.api.nvim_buf_set_extmark(selected_line.buf_id, global.namespace, selected_line.row_id, 0, {
-	--	virt_text = { { CONTEXT_L, "@comment" } },
-	--	virt_text_pos = "right_align",
-	--})
-end
-
----@return boolean is_context check if current line represent main_context
+---@return boolean is_context check if current line represent context
 local function is_context()
 	return selected_line.text:match("^>")
 end
 
----@return boolean is_head_context check if current line represent head_context
-local function is_summary()
-	return selected_line.text:match("^-")
-end
-
----@return boolean is_marker check if current line represent foot_context
-local function is_foot_context()
-	return selected_line.text:match("^#")
+---@return boolean is_context check if current line represent sub_context
+local function is_sub_context()
+	return selected_line.text:match("^*")
 end
 
 -- a submodule to decorate groups by frames
@@ -93,7 +78,6 @@ function M.try_set_frame_line()
 			return false
 		end
 		draw_line()
-		return false
 	end
 	return true
 end

@@ -7,8 +7,8 @@ local selected_line = require("draft.typography.line")
 local space = string.rep(" ", typo_config.indent_size)
 
 ---@return boolean is_comment Is actual decorated line commend
-local function is_not_paragraph()
-	return selected_line.text:match("^[\t <>].*")
+local function is_comment()
+	return selected_line.text:match("^[ \t].*")
 end
 
 ---@return boolean is_correct_node Is actual decorated line proper to indent
@@ -48,7 +48,7 @@ end
 -- Add an indent at the beginning of the line by regex
 ---@return NextStep next_step Always return true
 function M.try_make_indent_by_regex()
-	if is_not_paragraph() then
+	if is_comment() then
 		return true
 	end
 	make_indent()

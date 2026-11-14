@@ -9,7 +9,7 @@ local defaults = {
 	-- Configuration for core module
 	---@class CoreConfig
 	core = {
-		repleace_dash = "--",
+		repleace_dash = ">",
 		repleace_ellipsis = "...",
 		smart_quotes = true,
 		move_by_visual_lines = true,

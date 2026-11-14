@@ -3,8 +3,8 @@ local utils = require("draft.utils")
 -- Check if text content is section or group header & footer
 ---@param text string content of line to check
 ---@return boolean is_meta is line start with # or > or <
-local function is_meta(text)
-	return text:match("^[<>].*")
+local function is_context(text)
+	return text:match("^[--].*")
 end
 
 -- A submodule for skip lines
@@ -20,7 +20,7 @@ function M.try_skip()
 
 	if cursor_line_nr > prev_cursor_line_nr then
 		local text = vim.fn.getline(cursor_line_nr)
-		while is_meta(text) do
+		while is_context(text) do
 			vim.cmd("normal! j")
 			if cursor_line_nr == last_line_nr then
 				break

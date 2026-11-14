@@ -34,4 +34,11 @@
 (ERROR) @error
 (MISSING) @missing
 
+((marker) @comment
+ (#set! conceal ""))
+(namespace) @module
+(value) @module.builtin
+
+
+
 
