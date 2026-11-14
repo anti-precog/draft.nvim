@@ -9,12 +9,12 @@ local defaults = {
 	-- Configuration for core module
 	---@class CoreConfig
 	core = {
-		repleace_dash = "--",
+		repleace_dash = ">",
 		repleace_ellipsis = "...",
 		smart_quotes = true,
 		move_by_visual_lines = true,
 		auto_turn_page = true,
-		skip_meta_lines = true,
+		skip_meta_lines = false,
 		info_bar = true, -- WARN: Experimental feature
 	},
 

@@ -15,6 +15,7 @@
 (context
  (info) @label)
 
+
 (context) @nospell
 
 (sub_context) @operator
@@ -33,5 +34,7 @@
 ; other
 (ERROR) @error
 (MISSING) @missing
+
+
 
 

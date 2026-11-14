@@ -85,6 +85,7 @@ function M.init()
 	if typo_config.indent_size > 0 then
 		add_step(require("draft.typography.sub.indenter").try_make_indent_by_regex)
 	end
+	add_step(require("draft.typography.sub.hl_marker").try_highlight)
 	return M
 end
 
